@@ -499,3 +499,5 @@ var TopologyManager_ServiceDesc = grpc.ServiceDesc{
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "controller.proto",
 }
+
+// CI test modification

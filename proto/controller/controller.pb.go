@@ -3248,3 +3248,5 @@ func file_controller_proto_init() {
 	file_controller_proto_goTypes = nil
 	file_controller_proto_depIdxs = nil
 }
+
+// CI test modification

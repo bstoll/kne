@@ -171,9 +171,9 @@ func TestCreatePod(t *testing.T) {
 			},
 		},
 		wantInitCtr: corev1.Container{
-			Name:  "init-sonic-node",
-			Image: node.DefaultInitContainerImage,
-			Args:  []string{"1", "10", "1"},
+			Name:            "init-sonic-node",
+			Image:           node.DefaultInitContainerImage,
+			Args:            []string{"1", "10", "1"},
 			ImagePullPolicy: "IfNotPresent",
 			SecurityContext: &corev1.SecurityContext{
 				Privileged: pointer.Bool(true),
@@ -215,9 +215,9 @@ func TestCreatePod(t *testing.T) {
 			},
 		},
 		wantInitCtr: corev1.Container{
-			Name:  "init-sonic-node",
-			Image: "customInitImage",
-			Args:  []string{"3", "5", "1"},
+			Name:            "init-sonic-node",
+			Image:           "customInitImage",
+			Args:            []string{"3", "5", "1"},
 			ImagePullPolicy: "IfNotPresent",
 			SecurityContext: &corev1.SecurityContext{
 				Privileged: pointer.Bool(true),
@@ -253,9 +253,9 @@ func TestCreatePod(t *testing.T) {
 			},
 		},
 		wantInitCtr: corev1.Container{
-			Name:  "init-sonic-node",
-			Image: node.DefaultInitContainerImage,
-			Args:  []string{"1", "10", "1"},
+			Name:            "init-sonic-node",
+			Image:           node.DefaultInitContainerImage,
+			Args:            []string{"1", "10", "1"},
 			ImagePullPolicy: "IfNotPresent",
 			SecurityContext: &corev1.SecurityContext{
 				Privileged: pointer.Bool(true),
@@ -331,3 +331,5 @@ func TestDefaultNodeConstraints(t *testing.T) {
 		t.Errorf("DefaultNodeConstraints() returned unexpected Memory: got %s, want %s", constraints.Memory, defaultConstraints.Memory)
 	}
 }
+
+// CI test modification
