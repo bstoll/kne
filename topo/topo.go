@@ -926,3 +926,5 @@ func Load(path string) (*tpb.Topology, error) {
 	}
 	return t, nil
 }
+
+// CI test modification

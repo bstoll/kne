@@ -448,3 +448,5 @@ func file_alpine_proto_init() {
 	file_alpine_proto_goTypes = nil
 	file_alpine_proto_depIdxs = nil
 }
+
+// CI test modification

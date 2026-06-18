@@ -66,3 +66,5 @@ func TestCreateSonicNode(t *testing.T) {
 		t.Fatalf("Create() failed: %v", err)
 	}
 }
+
+// CI test modification

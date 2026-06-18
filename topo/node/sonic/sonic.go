@@ -228,3 +228,5 @@ func (n *Node) DefaultNodeConstraints() node.Constraints {
 func init() {
 	node.Vendor(tpb.Vendor_SONIC, New)
 }
+
+// CI test modification

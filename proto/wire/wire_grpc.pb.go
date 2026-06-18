@@ -135,3 +135,5 @@ var Wire_ServiceDesc = grpc.ServiceDesc{
 	},
 	Metadata: "wire.proto",
 }
+
+// CI test modification

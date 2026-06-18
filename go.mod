@@ -1,4 +1,4 @@
-module github.com/openconfig/kne
+module github.com/openconfig/kne // CI test modification 22
 
 go 1.24.0
 

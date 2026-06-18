@@ -1037,3 +1037,5 @@ func file_event_proto_init() {
 	file_event_proto_goTypes = nil
 	file_event_proto_depIdxs = nil
 }
+
+// CI test modification

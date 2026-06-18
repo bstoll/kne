@@ -177,3 +177,5 @@ func file_ceos_proto_init() {
 	file_ceos_proto_goTypes = nil
 	file_ceos_proto_depIdxs = nil
 }
+
+// CI test modification

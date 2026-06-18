@@ -161,3 +161,5 @@ func file_wire_proto_init() {
 	file_wire_proto_goTypes = nil
 	file_wire_proto_depIdxs = nil
 }
+
+// CI test modification
