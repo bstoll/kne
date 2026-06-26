@@ -234,8 +234,7 @@ func TestReset(t *testing.T) {
 	}()
 	rCmd.PersistentFlags().String("kubecfg", "", "")
 	rCmd.PersistentPreRunE = func(cmd *cobra.Command, args []string) error {
-		viper.BindPFlags(cmd.Flags())
-		return nil
+		return viper.BindPFlags(cmd.Flags())
 	}
 	buf := bytes.NewBuffer([]byte{})
 	rCmd.SetOut(buf)

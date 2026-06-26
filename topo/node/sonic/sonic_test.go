@@ -27,7 +27,7 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kfake "k8s.io/client-go/kubernetes/fake"
-	"k8s.io/utils/pointer"
+	"k8s.io/utils/ptr"
 )
 
 func TestNew(t *testing.T) {
@@ -171,12 +171,12 @@ func TestCreatePod(t *testing.T) {
 			},
 		},
 		wantInitCtr: corev1.Container{
-			Name:  "init-sonic-node",
-			Image: node.DefaultInitContainerImage,
-			Args:  []string{"1", "10", "1"},
+			Name:            "init-sonic-node",
+			Image:           node.DefaultInitContainerImage,
+			Args:            []string{"1", "10", "1"},
 			ImagePullPolicy: "IfNotPresent",
 			SecurityContext: &corev1.SecurityContext{
-				Privileged: pointer.Bool(true),
+				Privileged: ptr.To(true),
 			},
 		},
 		wantSonicCtr: corev1.Container{
@@ -189,7 +189,7 @@ func TestCreatePod(t *testing.T) {
 			},
 			ImagePullPolicy: "IfNotPresent",
 			SecurityContext: &corev1.SecurityContext{
-				Privileged: pointer.Bool(true),
+				Privileged: ptr.To(true),
 			},
 		},
 	}, {
@@ -215,12 +215,12 @@ func TestCreatePod(t *testing.T) {
 			},
 		},
 		wantInitCtr: corev1.Container{
-			Name:  "init-sonic-node",
-			Image: "customInitImage",
-			Args:  []string{"3", "5", "1"},
+			Name:            "init-sonic-node",
+			Image:           "customInitImage",
+			Args:            []string{"3", "5", "1"},
 			ImagePullPolicy: "IfNotPresent",
 			SecurityContext: &corev1.SecurityContext{
-				Privileged: pointer.Bool(true),
+				Privileged: ptr.To(true),
 			},
 		},
 		wantSonicCtr: corev1.Container{
@@ -233,7 +233,7 @@ func TestCreatePod(t *testing.T) {
 			},
 			ImagePullPolicy: "IfNotPresent",
 			SecurityContext: &corev1.SecurityContext{
-				Privileged: pointer.Bool(true),
+				Privileged: ptr.To(true),
 			},
 		},
 	}, {
@@ -253,12 +253,12 @@ func TestCreatePod(t *testing.T) {
 			},
 		},
 		wantInitCtr: corev1.Container{
-			Name:  "init-sonic-node",
-			Image: node.DefaultInitContainerImage,
-			Args:  []string{"1", "10", "1"},
+			Name:            "init-sonic-node",
+			Image:           node.DefaultInitContainerImage,
+			Args:            []string{"1", "10", "1"},
 			ImagePullPolicy: "IfNotPresent",
 			SecurityContext: &corev1.SecurityContext{
-				Privileged: pointer.Bool(true),
+				Privileged: ptr.To(true),
 			},
 		},
 		wantSonicCtr: corev1.Container{
@@ -271,7 +271,7 @@ func TestCreatePod(t *testing.T) {
 			},
 			ImagePullPolicy: "IfNotPresent",
 			SecurityContext: &corev1.SecurityContext{
-				Privileged: pointer.Bool(true),
+				Privileged: ptr.To(true),
 			},
 			VolumeMounts: []corev1.VolumeMount{{
 				Name:      "startup-config-volume",

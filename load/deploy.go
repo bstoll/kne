@@ -179,7 +179,7 @@ func (c *Config) decode(v reflect.Value, path []string, tag reflect.StructTag) (
 				}
 			case "spec":
 				if sf.Type != yamlNodeType {
-					return fmt.Errorf("%s is not of type %v\n", strings.Join(append(path, sf.Name), "."), yamlNodeType)
+					return fmt.Errorf("%s is not of type %v", strings.Join(append(path, sf.Name), "."), yamlNodeType)
 				}
 				node := sv.Interface().(yaml.Node)
 				spec = &node
@@ -193,9 +193,9 @@ func (c *Config) decode(v reflect.Value, path []string, tag reflect.StructTag) (
 		switch {
 		case kind == "" && spec == nil:
 		case kind == "":
-			return fmt.Errorf("spec field without kind: %s\n", strings.Join(path, "."))
+			return fmt.Errorf("spec field without kind: %s", strings.Join(path, "."))
 		case spec == nil:
-			return fmt.Errorf("kind field without spec: %s\n", strings.Join(path, "."))
+			return fmt.Errorf("kind field without spec: %s", strings.Join(path, "."))
 		default:
 			// kind and spec have been supplied.
 

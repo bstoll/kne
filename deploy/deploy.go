@@ -110,7 +110,10 @@ type Deployment struct {
 }
 
 func (d *Deployment) String() string {
-	b, _ := json.MarshalIndent(d, "", "\t")
+	b, err := json.MarshalIndent(d, "", "\t")
+	if err != nil {
+		return fmt.Sprintf("Deployment: %+v (marshal error: %v)", *d, err)
+	}
 	return string(b)
 }
 

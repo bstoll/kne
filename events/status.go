@@ -126,7 +126,7 @@ func (w *Watcher) isEventNormal(s *EventStatus) bool {
 	for _, m := range errorMsgs {
 		// Error out if message contains predefined message
 		if strings.Contains(message, m) {
-			w.errCh <- fmt.Errorf("Event failed due to %s . Message: %s", s.Event.Reason, message)
+			w.errCh <- fmt.Errorf("event failed due to %s. message: %s", s.Event.Reason, message)
 			w.cancel()
 			return false
 		}

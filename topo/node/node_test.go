@@ -15,7 +15,7 @@ import (
 	"k8s.io/apimachinery/pkg/util/intstr"
 	kfake "k8s.io/client-go/kubernetes/fake"
 	"k8s.io/client-go/rest"
-	"k8s.io/utils/pointer"
+	"k8s.io/utils/ptr"
 )
 
 func NewNR(impl *Impl) (Node, error) {
@@ -199,7 +199,7 @@ func TestCreateConfig(t *testing.T) {
 					t.Errorf("CreateConfig() did not create the expected file: %v", err)
 				}
 			case vs.ConfigMap != nil:
-				gotCM, err := n.KubeClient.CoreV1().ConfigMaps(n.Namespace).Get(ctx, vs.ConfigMap.LocalObjectReference.Name, metav1.GetOptions{})
+				gotCM, err := n.KubeClient.CoreV1().ConfigMaps(n.Namespace).Get(ctx, vs.ConfigMap.Name, metav1.GetOptions{})
 				if err != nil {
 					t.Errorf("CreateConfig() did not create the expected configmap: %v", err)
 				}
@@ -255,7 +255,7 @@ func TestService(t *testing.T) {
 				}},
 				Selector:                      map[string]string{"app": "dev1"},
 				Type:                          "LoadBalancer",
-				AllocateLoadBalancerNodePorts: pointer.Bool(false),
+				AllocateLoadBalancerNodePorts: ptr.To(false),
 			},
 		}},
 	}, {
@@ -301,7 +301,7 @@ func TestService(t *testing.T) {
 				}},
 				Selector:                      map[string]string{"app": "dev2"},
 				Type:                          "LoadBalancer",
-				AllocateLoadBalancerNodePorts: pointer.Bool(false),
+				AllocateLoadBalancerNodePorts: ptr.To(false),
 			},
 		}},
 	}, {

@@ -176,7 +176,7 @@ func (w *Watcher) updatePod(s *PodStatus) bool {
 		w.podStates[s.UID] = newState
 	}
 	if newState == "failed" {
-		w.errCh <- fmt.Errorf("Pod %s failed to deploy", s.Name)
+		w.errCh <- fmt.Errorf("pod %s failed to deploy", s.Name)
 		w.cancel()
 		return false
 	}

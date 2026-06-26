@@ -23,7 +23,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/fields"
 	log "k8s.io/klog/v2"
-	"k8s.io/utils/pointer"
+	"k8s.io/utils/ptr"
 )
 
 // ErrIncompatibleCliConn raised when an invalid scrapligo cli transport type is found.
@@ -174,7 +174,7 @@ func (n *Node) SpawnCLIConn() error {
 // If the model for cptx is specificied correctly it returns defaults for cptx.
 // Otherwise, it returns defaults for ncptx by default.
 func (n *Node) DefaultNodeConstraints() node.Constraints {
-	if n.Impl == nil || n.Impl.Proto == nil {
+	if n.Impl == nil || n.Proto == nil {
 		return defaultNCPTXConstraints
 	}
 	switch n.GetProto().Model {
@@ -496,8 +496,8 @@ func (n *Node) Create(ctx context.Context) error {
 				Resources:       node.ToResourceRequirements(pb.Constraints),
 				ImagePullPolicy: "IfNotPresent",
 				SecurityContext: &corev1.SecurityContext{
-					Privileged: pointer.Bool(true),
-					RunAsUser:  pointer.Int64(0),
+					Privileged: ptr.To(true),
+					RunAsUser:  ptr.To(int64(0)),
 					Capabilities: &corev1.Capabilities{
 						Add: []corev1.Capability{"SYS_ADMIN", "NET_ADMIN"},
 					},
@@ -564,7 +564,7 @@ func (n *Node) Create(ctx context.Context) error {
 					},
 				},
 			},
-			TerminationGracePeriodSeconds: pointer.Int64(0),
+			TerminationGracePeriodSeconds: ptr.To(int64(0)),
 			NodeSelector:                  map[string]string{},
 			Affinity: &corev1.Affinity{
 				PodAntiAffinity: &corev1.PodAntiAffinity{
@@ -586,7 +586,7 @@ func (n *Node) Create(ctx context.Context) error {
 		},
 	}
 	for label, v := range n.GetProto().GetLabels() {
-		pod.ObjectMeta.Labels[label] = v
+		pod.Labels[label] = v
 	}
 	if pb.Config.ConfigData != nil {
 		vol, err := n.CreateConfig(ctx)
@@ -599,7 +599,7 @@ func (n *Node) Create(ctx context.Context) error {
 			MountPath: pb.Config.ConfigPath + "/" + pb.Config.ConfigFile,
 			ReadOnly:  true,
 		}
-		if vol.VolumeSource.ConfigMap != nil {
+		if vol.ConfigMap != nil {
 			vm.SubPath = pb.Config.ConfigFile
 		}
 		for i, c := range pod.Spec.Containers {

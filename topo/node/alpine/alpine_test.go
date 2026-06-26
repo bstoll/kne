@@ -29,7 +29,7 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kfake "k8s.io/client-go/kubernetes/fake"
-	"k8s.io/utils/pointer"
+	"k8s.io/utils/ptr"
 )
 
 func TestNew(t *testing.T) {
@@ -200,7 +200,7 @@ func TestCreatePod(t *testing.T) {
 				Requests: corev1.ResourceList{}},
 			ImagePullPolicy: "IfNotPresent",
 			SecurityContext: &corev1.SecurityContext{
-				Privileged: pointer.Bool(true),
+				Privileged: ptr.To(true),
 			},
 		},
 		wantDpCtr: corev1.Container{
@@ -212,7 +212,7 @@ func TestCreatePod(t *testing.T) {
 				Requests: corev1.ResourceList{}},
 			ImagePullPolicy: "IfNotPresent",
 			SecurityContext: &corev1.SecurityContext{
-				Privileged: pointer.Bool(true),
+				Privileged: ptr.To(true),
 			},
 			VolumeMounts: []corev1.VolumeMount{{Name: "files", MountPath: "/files"}},
 		},
@@ -246,7 +246,7 @@ func TestCreatePod(t *testing.T) {
 				Requests: corev1.ResourceList{}},
 			ImagePullPolicy: "IfNotPresent",
 			SecurityContext: &corev1.SecurityContext{
-				Privileged: pointer.Bool(true),
+				Privileged: ptr.To(true),
 			},
 			VolumeMounts: []corev1.VolumeMount{{
 				Name:      "startup-config-volume",
@@ -264,7 +264,7 @@ func TestCreatePod(t *testing.T) {
 				Requests: corev1.ResourceList{}},
 			ImagePullPolicy: "IfNotPresent",
 			SecurityContext: &corev1.SecurityContext{
-				Privileged: pointer.Bool(true),
+				Privileged: ptr.To(true),
 			},
 			VolumeMounts: []corev1.VolumeMount{{
 				Name:      "files",
@@ -297,7 +297,7 @@ func TestCreatePod(t *testing.T) {
 				Requests: corev1.ResourceList{}},
 			ImagePullPolicy: "IfNotPresent",
 			SecurityContext: &corev1.SecurityContext{
-				Privileged: pointer.Bool(true),
+				Privileged: ptr.To(true),
 			},
 		},
 	}}

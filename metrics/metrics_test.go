@@ -25,6 +25,7 @@ import (
 	epb "github.com/openconfig/kne/proto/event"
 	"google.golang.org/api/option"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -36,7 +37,7 @@ func newTestReporter(t *testing.T, ctx context.Context) (*Reporter, *pstest.Serv
 	// Start a fake server running locally.
 	srv := pstest.NewServer()
 	// Connect to the server without using TLS.
-	conn, err := grpc.Dial(srv.Addr, grpc.WithInsecure())
+	conn, err := grpc.NewClient(srv.Addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		srv.Close()
 		t.Fatalf("failed to start fake PubSub server: %v", err)
@@ -212,7 +213,7 @@ func TestNewReporter(t *testing.T) {
 	defer srv.Close()
 
 	// Test missing topic
-	conn1, err := grpc.Dial(srv.Addr, grpc.WithInsecure())
+	conn1, err := grpc.NewClient(srv.Addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		t.Fatalf("failed to dial fake PubSub server: %v", err)
 	}
@@ -222,7 +223,7 @@ func TestNewReporter(t *testing.T) {
 	}
 
 	// Create default topic for default project/topic test
-	conn2, err := grpc.Dial(srv.Addr, grpc.WithInsecure())
+	conn2, err := grpc.NewClient(srv.Addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		t.Fatalf("failed to dial fake PubSub server: %v", err)
 	}
@@ -241,7 +242,7 @@ func TestNewReporter(t *testing.T) {
 	client.Close()
 
 	// Test NewReporter success with default project/topic
-	conn3, err := grpc.Dial(srv.Addr, grpc.WithInsecure())
+	conn3, err := grpc.NewClient(srv.Addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		t.Fatalf("failed to dial fake PubSub server: %v", err)
 	}

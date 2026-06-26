@@ -385,7 +385,9 @@ unexpected executions:
 				c := cmds.Command(cmd.Cmd, cmd.Args...)
 				c.SetStdout(&stdout)
 				c.SetStderr(&stderr)
-				_ = c.Run()
+				if err := c.Run(); err != nil {
+					t.Errorf("c.Run() returned unexpected error: %v", err)
+				}
 			}
 			err := cmds.Done()
 			if err.Error() != tt.done {

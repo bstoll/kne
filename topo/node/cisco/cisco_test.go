@@ -41,7 +41,10 @@ func init() {
 }
 
 func defaultNode(pb *tpb.Node) *tpb.Node {
-	node, _ := defaults(pb)
+	node, err := defaults(pb)
+	if err != nil {
+		panic(err)
+	}
 	return node
 }
 
@@ -945,8 +948,14 @@ func TestNodeStatus(t *testing.T) {
 				}()
 				podIsUpRegex = regexp.MustCompile("fake log") // this is the expected log from a fake pod
 			}
-			nImpl, _ := New(tt.ni)
-			n, _ := nImpl.(*Node)
+			nImpl, err := New(tt.ni)
+			if err != nil {
+				t.Fatalf("New() failed: %v", err)
+			}
+			n, ok := nImpl.(*Node)
+			if !ok {
+				t.Fatalf("nImpl is not a *Node")
+			}
 			status, err := n.Status(ctx)
 			if err != nil {
 				t.Errorf("Error is not expected for Node Status")
