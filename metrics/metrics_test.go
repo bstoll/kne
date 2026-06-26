@@ -94,9 +94,9 @@ func TestReportDeployClusterStart(t *testing.T) {
 	if _, ok := e.Event.(*epb.KNEEvent_DeployClusterStart); !ok {
 		t.Fatalf("event is not a DeployClusterStart event")
 	}
-	te := e.GetDeployClusterStart()
-	if te.Cluster.Cluster != epb.Cluster_CLUSTER_TYPE_EXTERNAL {
-		t.Errorf("event has wrong cluster type, got %v, want %v", te.Cluster.Cluster, epb.Cluster_CLUSTER_TYPE_EXTERNAL)
+	gotEvent := e.GetDeployClusterStart()
+	if gotEvent.Cluster.Cluster != epb.Cluster_CLUSTER_TYPE_EXTERNAL {
+		t.Errorf("event has wrong cluster type, got %v, want %v", gotEvent.Cluster.Cluster, epb.Cluster_CLUSTER_TYPE_EXTERNAL)
 	}
 }
 
@@ -130,9 +130,9 @@ func TestReportDeployClusterEnd(t *testing.T) {
 	if _, ok := e.Event.(*epb.KNEEvent_DeployClusterEnd); !ok {
 		t.Fatalf("event is not a DeployClusterEnd event")
 	}
-	te := e.GetDeployClusterEnd()
-	if te.Error != eventErr.Error() {
-		t.Errorf("event has wrong error message, got %v, want %v", te.Error, eventErr.Error())
+	gotEvent := e.GetDeployClusterEnd()
+	if gotEvent.Error != eventErr.Error() {
+		t.Errorf("event has wrong error message, got %v, want %v", gotEvent.Error, eventErr.Error())
 	}
 }
 
@@ -165,9 +165,9 @@ func TestReportCreateTopologyStart(t *testing.T) {
 	if _, ok := e.Event.(*epb.KNEEvent_CreateTopologyStart); !ok {
 		t.Fatalf("event is not a CreateTopologyStart event")
 	}
-	te := e.GetCreateTopologyStart()
-	if te.Topology.LinkCount != 3 {
-		t.Errorf("event has wrong link count, got %v, want 3", te.Topology.LinkCount)
+	gotEvent := e.GetCreateTopologyStart()
+	if gotEvent.Topology.LinkCount != 3 {
+		t.Errorf("event has wrong link count, got %v, want 3", gotEvent.Topology.LinkCount)
 	}
 }
 
@@ -201,9 +201,9 @@ func TestReportCreateTopologyEnd(t *testing.T) {
 	if _, ok := e.Event.(*epb.KNEEvent_CreateTopologyEnd); !ok {
 		t.Fatalf("event is not a CreateTopologyEnd event")
 	}
-	te := e.GetCreateTopologyEnd()
-	if te.Error != eventErr.Error() {
-		t.Errorf("event has wrong error message, got %v, want %v", te.Error, eventErr.Error())
+	gotEvent := e.GetCreateTopologyEnd()
+	if gotEvent.Error != eventErr.Error() {
+		t.Errorf("event has wrong error message, got %v, want %v", gotEvent.Error, eventErr.Error())
 	}
 }
 

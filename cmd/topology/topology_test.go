@@ -150,7 +150,7 @@ func TestReset(t *testing.T) {
 	}
 	fConfigRelative, closer := writeTopology(t, tWithConfigRelative)
 	defer closer()
-	tWithConfigDNE := &tpb.Topology{
+	tWithConfigMissing := &tpb.Topology{
 		Nodes: []*tpb.Node{{
 			Name:   "resettable1",
 			Vendor: tpb.Vendor(1001),
@@ -164,7 +164,7 @@ func TestReset(t *testing.T) {
 			Vendor: tpb.Vendor(1001),
 			Config: &tpb.Config{
 				ConfigData: &tpb.Config_File{
-					File: "dne",
+					File: "missing",
 				},
 			},
 		}, {
@@ -172,7 +172,7 @@ func TestReset(t *testing.T) {
 			Vendor: tpb.Vendor(1002),
 		}},
 	}
-	fConfigDNE, closer := writeTopology(t, tWithConfigDNE)
+	fConfigMissing, closer := writeTopology(t, tWithConfigMissing)
 	defer closer()
 	node.Vendor(tpb.Vendor(1001), NewR)
 	node.Vendor(tpb.Vendor(1002), NewNR)
@@ -206,15 +206,15 @@ func TestReset(t *testing.T) {
 		desc: "valid topology push with relative file location",
 		args: []string{"reset", fConfigRelative.Name(), "--skip", "--push"},
 	}, {
-		desc:    "valid topology push with config DNE",
-		args:    []string{"reset", fConfigDNE.Name(), "--skip", "--push"},
+		desc:    "valid topology push with config missing",
+		args:    []string{"reset", fConfigMissing.Name(), "--skip", "--push"},
 		wantErr: "no such file or directory",
 	}, {
-		desc: "valid topology push with config DNE single device",
-		args: []string{"reset", fConfigDNE.Name(), "--skip", "--push", "resettable1"},
+		desc: "valid topology push with config missing single device",
+		args: []string{"reset", fConfigMissing.Name(), "--skip", "--push", "resettable1"},
 	}, {
-		desc:    "valid topology push with config DNE single device invalid",
-		args:    []string{"reset", fConfigDNE.Name(), "--skip", "--push", "dne"},
+		desc:    "valid topology push with config missing single device invalid",
+		args:    []string{"reset", fConfigMissing.Name(), "--skip", "--push", "missing"},
 		wantErr: "not found",
 	}}
 
@@ -369,7 +369,7 @@ func TestGenerateRing(t *testing.T) {
 		wantErr: "links must be positive",
 	}, {
 		desc:    "file not found",
-		args:    []string{"generate", "ring", "dne.textproto", "2", "8"},
+		args:    []string{"generate", "ring", "missing.textproto", "2", "8"},
 		wantErr: "no such file",
 	}, {
 		desc:    "empty topology",
@@ -570,10 +570,10 @@ func TestPush(t *testing.T) {
 	defer os.Remove(confFile.Name())
 	tWithConfig := &tpb.Topology{
 		Nodes: []*tpb.Node{{
-			Name:   "configable",
+			Name:   "configurable",
 			Vendor: tpb.Vendor(1003),
 		}, {
-			Name:   "notconfigable",
+			Name:   "notconfigurable",
 			Vendor: tpb.Vendor(1004),
 		}},
 	}
@@ -593,22 +593,22 @@ func TestPush(t *testing.T) {
 	}, {
 		desc:    "missing args",
 		wantErr: "invalid args",
-		args:    []string{"push", fConfig.Name(), "configable"},
+		args:    []string{"push", fConfig.Name(), "configurable"},
 	}, {
 		desc:    "no file",
-		args:    []string{"push", fConfig.Name(), "configable", "filedne"},
+		args:    []string{"push", fConfig.Name(), "configurable", "filemissing"},
 		wantErr: "no such file",
 	}, {
 		desc:    "valid file invalid device",
 		args:    []string{"push", fConfig.Name(), "foo", confFile.Name()},
 		wantErr: `node "foo" not found`,
 	}, {
-		desc:    "valid file notconfigable device",
-		args:    []string{"push", fConfig.Name(), "notconfigable", confFile.Name()},
+		desc:    "valid file notconfigurable device",
+		args:    []string{"push", fConfig.Name(), "notconfigurable", confFile.Name()},
 		wantErr: "does not implement ConfigPusher",
 	}, {
 		desc: "valid file",
-		args: []string{"push", fConfig.Name(), "configable", confFile.Name()},
+		args: []string{"push", fConfig.Name(), "configurable", confFile.Name()},
 	}}
 
 	rCmd := New()

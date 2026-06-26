@@ -160,18 +160,18 @@ func TestCreateConfig(t *testing.T) {
 			},
 		},
 	}, {
-		desc: "config file dne",
+		desc: "config file does not exist",
 		node: &topopb.Node{
 			Name:   "dev1",
 			Vendor: topopb.Vendor(1001),
 			Config: &topopb.Config{
 				ConfigFile: "test.cfg",
 				ConfigData: &topopb.Config_File{
-					File: "testdata/dne.cfg",
+					File: "testdata/nonexistent.cfg",
 				},
 			},
 		},
-		wantErr: "open testdata/dne.cfg: no such file",
+		wantErr: "open testdata/nonexistent.cfg: no such file",
 	}}
 	for _, tt := range tests {
 		t.Run(tt.desc, func(t *testing.T) {
@@ -365,7 +365,7 @@ func TestValidateConstraints(t *testing.T) {
 		constraintValues map[string]int
 	}{
 		{
-			desc: "Invalid case - contraint value is greater than upper bound",
+			desc: "Invalid case - constraint value is greater than upper bound",
 			node: &topopb.Node{
 				Name: "node1",
 				HostConstraints: []*topopb.HostConstraint{

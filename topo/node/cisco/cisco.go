@@ -277,7 +277,7 @@ func (n *Node) Create(ctx context.Context) error {
 }
 
 // DefaultNodeConstraints returns default node constraints for CISCO.
-// If the model for 8000e is specificied correctly it returns defaults for 8000e.
+// If the model for 8000e is specified correctly it returns defaults for 8000e.
 // Otherwise, it returns defaults for XRD by default.
 func (n *Node) DefaultNodeConstraints() node.Constraints {
 	if n.Impl == nil || n.Proto == nil {
@@ -292,7 +292,7 @@ func (n *Node) DefaultNodeConstraints() node.Constraints {
 	return defaultXRDConstraints
 }
 
-// validateHostConstraints - Validates host contraints through the default node's implementation. It skips the validation optionally
+// validateHostConstraints - Validates host constraints through the default node's implementation. It skips the validation optionally
 // based on skipValidation flag which is useful for unit tests
 func validateHostConstraints(n *Node, skipValidation bool) error {
 	if skipValidation {
@@ -674,9 +674,9 @@ func (n *Node) ResetCfg(ctx context.Context) error {
 
 	var cmd string
 	if n.Proto.Model == ModelXRD {
-		// Copy the snooped management interface config from a know location and the startup config from
+		// Copy the snooped management interface config from a known location and the startup config from
 		// the mounted location so it can be applied. This is required to preserve the snooped management
-		// IP addres and since the "copy" xr_cli command can only access files on disk 0/1.
+		// IP address and since the "copy" xr_cli command can only access files on disk 0/1.
 		startup_config := n.Proto.Config.Env["XR_EVERY_BOOT_CONFIG"]
 		if startup_config == "" {
 			return status.Errorf(codes.InvalidArgument, "XR_EVERY_BOOT_CONFIG is not set")
@@ -760,7 +760,7 @@ func (n *Node) ConfigPush(ctx context.Context, r io.Reader) error {
 func (n *Node) GenerateSelfSigned(context.Context) error {
 	// IOS XR automatically generates a self-signed certificate when gRPC is first enabled.
 	// If the startup configuration contains a gRPC configuration, or if the user configures
-	// gRPC after bootup, the self-signed cert will automatically be created and used.
+	// gRPC after boot up, the self-signed cert will automatically be created and used.
 	return status.Errorf(codes.Unimplemented, "certificate generation is not supported")
 }
 

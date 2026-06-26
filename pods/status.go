@@ -71,7 +71,7 @@ func newWatcher(ctx context.Context, cancel func(), ch chan *PodStatus, stop fun
 	return w
 }
 
-// SetProgress determins if progress output should be displayed while watching.
+// SetProgress determines if progress output should be displayed while watching.
 func (w *Watcher) SetProgress(value bool) {
 	w.mu.Lock()
 	w.progress = value

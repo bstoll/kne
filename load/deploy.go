@@ -13,7 +13,7 @@ import (
 
 var yamlNodeType = reflect.TypeOf(yaml.Node{})
 
-// open is overriden in tests.
+// open is overridden in tests.
 var open = os.Open
 
 // A Spec represents a structure that yaml can be decoded into.  The type is the
@@ -43,7 +43,7 @@ func Register(kind string, spec *Spec) {
 // A Config represents a KNE deployment configuration.
 type Config struct {
 	Path       string      // Path of the configuration file
-	Dir        string      // Absolute path of the diretory Path is in
+	Dir        string      // Absolute path of the directory Path is in
 	Config     interface{} // The configuration structure
 	Deployment interface{} // Filled by Config.Decode
 
