@@ -1,12 +1,11 @@
 # KNE Mutating Webhook
 
 This directory contains the code and configurations (in the form of manifests)
-for the mutating webhook. The webhook should be deployed onto a KNE
-cluster.
+for the mutating webhook. The webhook should be deployed onto a KNE cluster.
 
-This webhook can be used to mutate any K8 resources. This directory contains
-the generic webhook along with an example mutator that simply adds an alpine
-linux container to created pods.
+This webhook can be used to mutate any K8 resources. This directory contains the
+generic webhook along with an example mutator that simply adds an alpine linux
+container to created pods.
 
 To develop custom a custom mutation simply change the mutate function in the
 examples subdirectory.
@@ -79,9 +78,9 @@ default                          kne-assembly-webhook-f5b8cf987-lpxjt           
 
 We can now create the KNE topology.
 
-*Note* The KNE topology must have the label `webhook:enabled` for each node, as in
-[this example](examples/topology.textproto),
-otherwise the webhook will ignore the pod upon create.
+_Note_ The KNE topology must have the label `webhook:enabled` for each node, as
+in [this example](examples/topology.textproto), otherwise the webhook will
+ignore the pod upon create.
 
 ```bash
 labels {
@@ -96,8 +95,8 @@ Use the normal KNE command to create the topology.
 kne create examples/topology.textproto
 ```
 
-You should now see r1 with 2 containers instead of the one, this is
-because the webhook has injected the alpine linux container.
+You should now see r1 with 2 containers instead of the one, this is because the
+webhook has injected the alpine linux container.
 
 ```bash
 $ kubectl get pods -n webhook-example
@@ -175,8 +174,8 @@ I0402 23:24:36.394188       1 mutate.go:45] Mutating &TypeMeta{Kind:Pod,APIVersi
 I0402 23:24:36.394227       1 addcontainer.go:34] Ignoring pod "r2", mutation not requested
 ```
 
-This output shows that it mutated the pod r1 but not r2 since
-the label was not added to that KNE node.
+This output shows that it mutated the pod r1 but not r2 since the label was not
+added to that KNE node.
 
 ### TLS
 
@@ -197,7 +196,6 @@ Edit `main.go` to specify any mutation functions as desired. The example uses
 the mutation function found in `examples/addcontainer/addcontainer.go` but any
 mutation function is supported. This includes mutating services and other
 resources besides just pods. However you may also have to change
-`manifests/mutating.config.yaml` to select other resources types than just
-pods.
+`manifests/mutating.config.yaml` to select other resources types than just pods.
 
 After customization is done, rebuild the container and reapply the manifests.

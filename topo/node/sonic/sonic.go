@@ -11,6 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
+// Package sonic implements a SONIC node in the topology.
 package sonic
 
 import (
@@ -20,7 +22,7 @@ import (
 
 	"github.com/openconfig/kne/topo/node"
 	"google.golang.org/protobuf/proto"
-	"k8s.io/utils/pointer"
+	"k8s.io/utils/ptr"
 
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -52,6 +54,7 @@ var (
 	}
 )
 
+// New returns a new SONIC node.
 func New(nodeImpl *node.Impl) (node.Node, error) {
 	if nodeImpl == nil {
 		return nil, fmt.Errorf("nodeImpl cannot be nil")
@@ -83,10 +86,12 @@ func renameInterfaces(in map[string]*tpb.Interface) map[string]*tpb.Interface {
 	return intf
 }
 
+// Node is a SONIC node.
 type Node struct {
 	*node.Impl
 }
 
+// Create creates the SONIC node.
 func (n *Node) Create(ctx context.Context) error {
 	if err := n.ValidateConstraints(); err != nil {
 		return fmt.Errorf("node %s failed to validate node with errors: %s", n.Name(), err)
@@ -120,7 +125,7 @@ func (n *Node) CreatePod(ctx context.Context) error {
 		Resources:       node.ToResourceRequirements(pb.Constraints),
 		ImagePullPolicy: "IfNotPresent",
 		SecurityContext: &corev1.SecurityContext{
-			Privileged: pointer.Bool(true),
+			Privileged: ptr.To(true),
 		},
 	}}
 
@@ -143,11 +148,11 @@ func (n *Node) CreatePod(ctx context.Context) error {
 				},
 				ImagePullPolicy: "IfNotPresent",
 				SecurityContext: &corev1.SecurityContext{
-					Privileged: pointer.Bool(true),
+					Privileged: ptr.To(true),
 				},
 			}},
 			Containers:                    sonicContainers,
-			TerminationGracePeriodSeconds: pointer.Int64(0),
+			TerminationGracePeriodSeconds: ptr.To(int64(0)),
 			NodeSelector:                  map[string]string{},
 			Affinity: &corev1.Affinity{
 				PodAntiAffinity: &corev1.PodAntiAffinity{
@@ -180,7 +185,7 @@ func (n *Node) CreatePod(ctx context.Context) error {
 			MountPath: pb.Config.ConfigPath + "/" + pb.Config.ConfigFile,
 			ReadOnly:  true,
 		}
-		if vol.VolumeSource.ConfigMap != nil {
+		if vol.ConfigMap != nil {
 			vm.SubPath = pb.Config.ConfigFile
 		}
 		for i, c := range pod.Spec.Containers {
@@ -221,6 +226,7 @@ func defaults(pb *tpb.Node) *tpb.Node {
 	return pb
 }
 
+// DefaultNodeConstraints returns the default node constraints.
 func (n *Node) DefaultNodeConstraints() node.Constraints {
 	return defaultConstraints
 }

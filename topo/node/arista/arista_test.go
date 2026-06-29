@@ -87,7 +87,7 @@ func TestNew(t *testing.T) {
 					},
 				},
 			},
-			wantErr: "Unrecognized interface name: Ethernet1/2/3/4",
+			wantErr: "unrecognized interface name: Ethernet1/2/3/4",
 		}, {
 			desc: "invalid eth intfs 2",
 			nImpl: &node.Impl{
@@ -97,7 +97,7 @@ func TestNew(t *testing.T) {
 					},
 				},
 			},
-			wantErr: "Unrecognized interface name: Ethernet",
+			wantErr: "unrecognized interface name: Ethernet",
 		}, {
 			desc: "invalid management intfs 1",
 			nImpl: &node.Impl{
@@ -109,7 +109,7 @@ func TestNew(t *testing.T) {
 					},
 				},
 			},
-			wantErr: "Unrecognized interface name: Management1/2/3",
+			wantErr: "unrecognized interface name: Management1/2/3",
 		}, {
 			desc: "invalid management intfs 2",
 			nImpl: &node.Impl{
@@ -119,7 +119,7 @@ func TestNew(t *testing.T) {
 					},
 				},
 			},
-			wantErr: "Unrecognized interface name: Management",
+			wantErr: "unrecognized interface name: Management",
 		}, {
 			desc: "default check with empty topo proto",
 			nImpl: &node.Impl{
@@ -457,7 +457,7 @@ func TestCRD(t *testing.T) {
 					Proto:      tt.proto,
 				},
 			}
-			node.Impl.Proto.Name = name
+			node.Proto.Name = name
 			err := node.CreateCRD(ctx)
 			if s := errdiff.Check(err, tt.wantErr); s != "" {
 				t.Errorf("New() unexpected err: %s", s)
@@ -623,7 +623,7 @@ func TestStatus(t *testing.T) {
 					Proto:      &topopb.Node{},
 				},
 			}
-			node.Impl.Proto.Name = name
+			node.Proto.Name = name
 			status, err := node.Status(ctx)
 			if s := errdiff.Check(err, tt.cantWatch); s != "" {
 				t.Errorf("Status() unexpected err: %s", s)

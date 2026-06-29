@@ -31,10 +31,10 @@ message PodQuery {
 }
 
 message SkipQuery {
-  string pod = 1;  
+  string pod = 1;
   string peer = 2;
   string kube_ns = 3;
-  int64 link_id = 4;  
+  int64 link_id = 4;
 }
 
 message BoolResponse {
@@ -68,12 +68,12 @@ message WireDef {
   // Interface name, which comes from topology definition and to be put
   // inside container.
   // This filed is used when grpc-wire to be created.
-  string intf_name_in_pod = 3;    
+  string intf_name_in_pod = 3;
 
   // Network name space of the local pod which is connected to this
   // grpc-wire
-  string local_pod_net_ns = 4;  
-    
+  string local_pod_net_ns = 4;
+
   // Each meshnet link has a uid.
   int64 link_uid = 5;
 
@@ -89,7 +89,6 @@ message WireDef {
   string topo_ns = 8;
 
   string local_pod_ip = 9;
-  
 }
 
 message WireCreateResponse {
@@ -103,8 +102,8 @@ message WireDownResponse {
 }
 
 message Packet {
-  // the remote machine interface id, to which this packet should be delivered. 
-  int64 remot_intf_id = 1;   
+  // the remote machine interface id, to which this packet should be delivered.
+  int64 remot_intf_id = 1;
   bytes frame = 2;
 }
 
@@ -113,20 +112,19 @@ message GenerateNodeInterfaceNameRequest {
   string pod_name = 2;
 }
 
-
 message GenerateNodeInterfaceNameResponse {
   bool ok = 1;
-  string node_intf_name = 2;   
+  string node_intf_name = 2;
 }
 
 service Local {
-  rpc Get (PodQuery) returns (Pod);
-  rpc SetAlive (Pod) returns (BoolResponse);
-  rpc SkipReverse (SkipQuery) returns (BoolResponse);
-  rpc Skip (SkipQuery) returns (BoolResponse);
-  rpc IsSkipped (SkipQuery) returns (BoolResponse);
+  rpc Get(PodQuery) returns (Pod);
+  rpc SetAlive(Pod) returns (BoolResponse);
+  rpc SkipReverse(SkipQuery) returns (BoolResponse);
+  rpc Skip(SkipQuery) returns (BoolResponse);
+  rpc IsSkipped(SkipQuery) returns (BoolResponse);
 
-  rpc GRPCWireExists(WireDef) returns (WireCreateResponse); 
+  rpc GRPCWireExists(WireDef) returns (WireCreateResponse);
   rpc AddGRPCWireLocal(WireDef) returns (BoolResponse);
   rpc RemGRPCWire(WireDef) returns (BoolResponse);
 
@@ -138,12 +136,12 @@ service Local {
 }
 
 service Remote {
-  rpc Update (RemotePod) returns (BoolResponse);
+  rpc Update(RemotePod) returns (BoolResponse);
   rpc AddGRPCWireRemote(WireDef) returns (WireCreateResponse);
   rpc GRPCWireDownRemote(WireDef) returns (WireDownResponse);
 }
 
 service WireProtocol {
-  rpc SendToOnce (Packet) returns (BoolResponse);
-  rpc SendToStream (stream Packet) returns (BoolResponse);
+  rpc SendToOnce(Packet) returns (BoolResponse);
+  rpc SendToStream(stream Packet) returns (BoolResponse);
 }

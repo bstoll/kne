@@ -22,7 +22,7 @@ import (
 
 	"github.com/openconfig/kne/topo/node"
 	"google.golang.org/protobuf/proto"
-	"k8s.io/utils/pointer"
+	"k8s.io/utils/ptr"
 
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -123,7 +123,7 @@ func (n *Node) CreatePod(ctx context.Context) error {
 		Resources:       node.ToResourceRequirements(pb.Constraints),
 		ImagePullPolicy: "IfNotPresent",
 		SecurityContext: &corev1.SecurityContext{
-			Privileged: pointer.Bool(true),
+			Privileged: ptr.To(true),
 		},
 	}}
 
@@ -193,14 +193,14 @@ func (n *Node) CreatePod(ctx context.Context) error {
 				Resources:       node.ToResourceRequirements(pb.Constraints),
 				ImagePullPolicy: "IfNotPresent",
 				SecurityContext: &corev1.SecurityContext{
-					Privileged: pointer.Bool(true),
+					Privileged: ptr.To(true),
 				},
 				VolumeMounts: extraMounts,
 			}
 			alpineContainers = append(alpineContainers, containerSpec)
 		default:
 			// Only Dataplane container is supported as the custom container
-			return fmt.Errorf("Alpine supports only 1 custom container, %d provided.", numContainers)
+			return fmt.Errorf("alpine supports only 1 custom container, %d provided", numContainers)
 		}
 	}
 
@@ -223,11 +223,11 @@ func (n *Node) CreatePod(ctx context.Context) error {
 				},
 				ImagePullPolicy: "IfNotPresent",
 				SecurityContext: &corev1.SecurityContext{
-					Privileged: pointer.Bool(true),
+					Privileged: ptr.To(true),
 				},
 			}},
 			Containers:                    alpineContainers,
-			TerminationGracePeriodSeconds: pointer.Int64(0),
+			TerminationGracePeriodSeconds: ptr.To(int64(0)),
 			NodeSelector:                  map[string]string{},
 			Affinity: &corev1.Affinity{
 				PodAntiAffinity: &corev1.PodAntiAffinity{
@@ -261,7 +261,7 @@ func (n *Node) CreatePod(ctx context.Context) error {
 			MountPath: pb.Config.ConfigPath + "/" + pb.Config.ConfigFile,
 			ReadOnly:  true,
 		}
-		if vol.VolumeSource.ConfigMap != nil {
+		if vol.ConfigMap != nil {
 			vm.SubPath = pb.Config.ConfigFile
 		}
 		for i, c := range pod.Spec.Containers {

@@ -1,2 +1,3 @@
 [codespell]
 skip = *.pdf,*.png,*.jpg,*.gif,*.ico,go.sum
+ignore-words-list = notin,NotIn

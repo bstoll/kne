@@ -54,7 +54,9 @@ environment.`,
 				return fmt.Errorf("error reading config: %w", err)
 			}
 		}
-		viper.BindPFlags(cmd.Flags())
+		if err := viper.BindPFlags(cmd.Flags()); err != nil {
+			return err
+		}
 		viper.SetDefault("report_usage", false)
 		return nil
 	}

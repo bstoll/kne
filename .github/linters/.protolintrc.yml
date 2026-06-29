@@ -1,3 +1,4 @@
+---
 lint:
   rules:
     remove: # TODO: fix proto files and remove these.

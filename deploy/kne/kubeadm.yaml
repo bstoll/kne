@@ -1,6 +1,7 @@
 # kubeadm.yaml cluster config file sets up ingress, cni, and controllers in a new k8 cluster
 # created using kubeadm. The kubeadm cluster starts as a single node cluster but can be joined
 # from other hosts to create a multinode cluster.
+---
 cluster:
   kind: Kubeadm
   spec:

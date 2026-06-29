@@ -284,11 +284,11 @@ func TestFailed(t *testing.T) {
 				}
 			}
 			for _, u := range cmds.unexpected {
-				var ue Response
+				var unexpectedResp Response
 				if len(tt.unexpected) > 0 {
-					ue = tt.unexpected[0]
+					unexpectedResp = tt.unexpected[0]
 				}
-				t.Logf("Compare %v and %v", u, ue)
+				t.Logf("Compare %v and %v", u, unexpectedResp)
 				if len(tt.unexpected) > 0 && tt.unexpected[0].String() == u.String() {
 					tt.unexpected = tt.unexpected[1:]
 					continue
@@ -385,7 +385,9 @@ unexpected executions:
 				c := cmds.Command(cmd.Cmd, cmd.Args...)
 				c.SetStdout(&stdout)
 				c.SetStderr(&stderr)
-				_ = c.Run()
+				if err := c.Run(); err != nil {
+					t.Errorf("c.Run() returned unexpected error: %v", err)
+				}
 			}
 			err := cmds.Done()
 			if err.Error() != tt.done {

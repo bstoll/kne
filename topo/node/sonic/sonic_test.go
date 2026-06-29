@@ -27,7 +27,7 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kfake "k8s.io/client-go/kubernetes/fake"
-	"k8s.io/utils/pointer"
+	"k8s.io/utils/ptr"
 )
 
 func TestNew(t *testing.T) {
@@ -152,11 +152,11 @@ func TestNew(t *testing.T) {
 
 func TestCreatePod(t *testing.T) {
 	tests := []struct {
-		desc         string
-		nImpl        *node.Impl
-		wantInitCtr  corev1.Container
-		wantSonicCtr corev1.Container
-		wantErr      string
+		desc               string
+		nImpl              *node.Impl
+		wantInitContainer  corev1.Container
+		wantSonicContainer corev1.Container
+		wantErr            string
 	}{{
 		desc: "simple sonic container",
 		nImpl: &node.Impl{
@@ -170,16 +170,16 @@ func TestCreatePod(t *testing.T) {
 				},
 			},
 		},
-		wantInitCtr: corev1.Container{
-			Name:  "init-sonic-node",
-			Image: node.DefaultInitContainerImage,
-			Args:  []string{"1", "10", "1"},
+		wantInitContainer: corev1.Container{
+			Name:            "init-sonic-node",
+			Image:           node.DefaultInitContainerImage,
+			Args:            []string{"1", "10", "1"},
 			ImagePullPolicy: "IfNotPresent",
 			SecurityContext: &corev1.SecurityContext{
-				Privileged: pointer.Bool(true),
+				Privileged: ptr.To(true),
 			},
 		},
-		wantSonicCtr: corev1.Container{
+		wantSonicContainer: corev1.Container{
 			Name:    "sonic-node",
 			Image:   "sonicImage",
 			Command: []string{"sonicCommand"},
@@ -189,7 +189,7 @@ func TestCreatePod(t *testing.T) {
 			},
 			ImagePullPolicy: "IfNotPresent",
 			SecurityContext: &corev1.SecurityContext{
-				Privileged: pointer.Bool(true),
+				Privileged: ptr.To(true),
 			},
 		},
 	}, {
@@ -214,16 +214,16 @@ func TestCreatePod(t *testing.T) {
 				},
 			},
 		},
-		wantInitCtr: corev1.Container{
-			Name:  "init-sonic-node",
-			Image: "customInitImage",
-			Args:  []string{"3", "5", "1"},
+		wantInitContainer: corev1.Container{
+			Name:            "init-sonic-node",
+			Image:           "customInitImage",
+			Args:            []string{"3", "5", "1"},
 			ImagePullPolicy: "IfNotPresent",
 			SecurityContext: &corev1.SecurityContext{
-				Privileged: pointer.Bool(true),
+				Privileged: ptr.To(true),
 			},
 		},
-		wantSonicCtr: corev1.Container{
+		wantSonicContainer: corev1.Container{
 			Name:    "sonic-node",
 			Image:   "sonicImage",
 			Command: []string{"sonicCommand"},
@@ -233,7 +233,7 @@ func TestCreatePod(t *testing.T) {
 			},
 			ImagePullPolicy: "IfNotPresent",
 			SecurityContext: &corev1.SecurityContext{
-				Privileged: pointer.Bool(true),
+				Privileged: ptr.To(true),
 			},
 		},
 	}, {
@@ -252,16 +252,16 @@ func TestCreatePod(t *testing.T) {
 				},
 			},
 		},
-		wantInitCtr: corev1.Container{
-			Name:  "init-sonic-node",
-			Image: node.DefaultInitContainerImage,
-			Args:  []string{"1", "10", "1"},
+		wantInitContainer: corev1.Container{
+			Name:            "init-sonic-node",
+			Image:           node.DefaultInitContainerImage,
+			Args:            []string{"1", "10", "1"},
 			ImagePullPolicy: "IfNotPresent",
 			SecurityContext: &corev1.SecurityContext{
-				Privileged: pointer.Bool(true),
+				Privileged: ptr.To(true),
 			},
 		},
-		wantSonicCtr: corev1.Container{
+		wantSonicContainer: corev1.Container{
 			Name:    "sonic-node",
 			Image:   "sonicImage",
 			Command: []string{"sonicCommand"},
@@ -271,7 +271,7 @@ func TestCreatePod(t *testing.T) {
 			},
 			ImagePullPolicy: "IfNotPresent",
 			SecurityContext: &corev1.SecurityContext{
-				Privileged: pointer.Bool(true),
+				Privileged: ptr.To(true),
 			},
 			VolumeMounts: []corev1.VolumeMount{{
 				Name:      "startup-config-volume",
@@ -305,16 +305,16 @@ func TestCreatePod(t *testing.T) {
 			if len(initContainers) != 1 {
 				t.Fatalf("Num init containers mismatch: want: 1 got: %v", len(initContainers))
 			}
-			if s := cmp.Diff(tt.wantInitCtr, initContainers[0]); s != "" {
-				t.Fatalf("Init Container mismatch: %s,\n got:\n%v \n want:\n%v\n", s, initContainers[0], tt.wantInitCtr)
+			if s := cmp.Diff(tt.wantInitContainer, initContainers[0]); s != "" {
+				t.Fatalf("Init Container mismatch: %s,\n got:\n%v \n want:\n%v\n", s, initContainers[0], tt.wantInitContainer)
 			}
 
 			containers := pod.Spec.Containers
 			if len(containers) != 1 {
 				t.Fatalf("Num containers mismatch: want: 1 got: %v", len(containers))
 			}
-			if s := cmp.Diff(tt.wantSonicCtr, containers[0]); s != "" {
-				t.Fatalf("Sonic Container mismatch: %s,\n got:\n%v \n want:\n%v\n", s, containers[0], tt.wantSonicCtr)
+			if s := cmp.Diff(tt.wantSonicContainer, containers[0]); s != "" {
+				t.Fatalf("Sonic Container mismatch: %s,\n got:\n%v \n want:\n%v\n", s, containers[0], tt.wantSonicContainer)
 			}
 		})
 	}
