@@ -102,9 +102,9 @@ func WatchEventStatus(ctx context.Context, client kubernetes.Interface, namespac
 // EventToStatus returns a pointer to a new EventStatus for an event.
 func EventToStatus(event *corev1.Event) *EventStatus {
 	s := EventStatus{
-		Name:      event.ObjectMeta.Name,
-		Namespace: event.ObjectMeta.Namespace,
-		UID:       event.ObjectMeta.UID,
+		Name:      event.Name,
+		Namespace: event.Namespace,
+		UID:       event.UID,
 	}
 	event.DeepCopyInto(&s.Event)
 	event = &s.Event
