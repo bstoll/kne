@@ -132,48 +132,48 @@ spec:
         app: neo4j
     spec:
       containers:
-      - name: neo4j
-        resources:
-          requests:
-            memory: "512Mi"
-            cpu: "250m"
-          limits:
-            memory: "1024Mi"
-            cpu: "500m"
-        image: neo4j:latest
-        ports:
-        - containerPort: 7474
-        - containerPort: 7687
-        env:
-        - name: SIMPLE_SERVICE_VERSION
-          value: "0.9"
-        - name: NEO4J_AUTH
-          value: neo4j/test
-        - name: NEO4J_dbms_connector_https_advertised__address
-          value: "localhost:7473"
-        - name: NEO4J_dbms_connector_http_advertised__address
-          value: "localhost:7474"
-        - name: NEO4J_dbms_connector_bolt_advertised__address
-          value: "localhost:7687"
-        volumeMounts:
-        - name: neo4j-data
-          mountPath: /data
-        - name: neo4j-logs
-          mountPath: /logs        
-        - name: neo4j-plugins
-          mountPath: /plugins
-        - name: neo4j-import
-          mountPath: /var/lib/neo4j/import
+        - name: neo4j
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1024Mi"
+              cpu: "500m"
+          image: neo4j:latest
+          ports:
+            - containerPort: 7474
+            - containerPort: 7687
+          env:
+            - name: SIMPLE_SERVICE_VERSION
+              value: "0.9"
+            - name: NEO4J_AUTH
+              value: neo4j/test
+            - name: NEO4J_dbms_connector_https_advertised__address
+              value: "localhost:7473"
+            - name: NEO4J_dbms_connector_http_advertised__address
+              value: "localhost:7474"
+            - name: NEO4J_dbms_connector_bolt_advertised__address
+              value: "localhost:7687"
+          volumeMounts:
+            - name: neo4j-data
+              mountPath: /data
+            - name: neo4j-logs
+              mountPath: /logs
+            - name: neo4j-plugins
+              mountPath: /plugins
+            - name: neo4j-import
+              mountPath: /var/lib/neo4j/import
       volumes:
-      - name: neo4j-data
-        persistentVolumeClaim:
-          claimName: neo4j-data
-      - name: neo4j-logs
-        persistentVolumeClaim:
-          claimName: neo4j-logs
-      - name: neo4j-plugins
-        persistentVolumeClaim:
-          claimName: neo4j-plugins
-      - name: neo4j-import
-        persistentVolumeClaim:
-          claimName: neo4j-import
+        - name: neo4j-data
+          persistentVolumeClaim:
+            claimName: neo4j-data
+        - name: neo4j-logs
+          persistentVolumeClaim:
+            claimName: neo4j-logs
+        - name: neo4j-plugins
+          persistentVolumeClaim:
+            claimName: neo4j-plugins
+        - name: neo4j-import
+          persistentVolumeClaim:
+            claimName: neo4j-import
