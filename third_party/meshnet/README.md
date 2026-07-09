@@ -1,11 +1,19 @@
 # meshnet CNI (KNE Fork)
 
-> [!NOTE]
-> This directory contains a fork of the archived [networkop/meshnet-cni](https://github.com/networkop/meshnet-cni) project, now integrated and maintained directly within the OpenConfig KNE repository.
+> [!NOTE] This directory contains a fork of the archived
+> [networkop/meshnet-cni](https://github.com/networkop/meshnet-cni) project, now
+> integrated and maintained directly within the OpenConfig KNE repository.
 >
-> Future development, bug fixes, and CI/CD testing are managed as part of the parent [KNE project](https://github.com/openconfig/kne). Please file any issues or pull requests in the main KNE repository.
+> Future development, bug fixes, and CI/CD testing are managed as part of the
+> parent [KNE project](https://github.com/openconfig/kne). Please file any
+> issues or pull requests in the main KNE repository.
 
-**meshnet** is a (K8s) CNI plugin to create arbitrary network topologies out of point-to-point links with the help of [koko](https://github.com/redhat-nfvpe/koko). Heavily inspired by [Ratchet-CNI](https://github.com/dougbtv/ratchet-cni), [kokonet](https://github.com/s1061123/kokonet) and [Multus](https://github.com/intel/multus-cni).
+**meshnet** is a (K8s) CNI plugin to create arbitrary network topologies out of
+point-to-point links with the help of
+[koko](https://github.com/redhat-nfvpe/koko). Heavily inspired by
+[Ratchet-CNI](https://github.com/dougbtv/ratchet-cni),
+[kokonet](https://github.com/s1061123/kokonet) and
+[Multus](https://github.com/intel/multus-cni).
 
 ## New in version 0.2.0
 
@@ -15,14 +23,19 @@
 
 ## Architecture
 
-The goal of this plugin is to interconnect pods via direct point-to-point links according to a pre-define topology. To do that, the plugin uses three types of links:
+The goal of this plugin is to interconnect pods via direct point-to-point links
+according to a pre-define topology. To do that, the plugin uses three types of
+links:
 
 - **veth** - used to connect two pods running on the same host
 - **vxlan** - used to connected two pods running on different hosts
-  - Optionally users can opt in to use **gRPC** instead, for this use case. Check [Installation](#installation).
-- **macvlan** - used to connect to external resources, i.e. any physical or virtual device outside of the Kubernetes cluster
+  - Optionally users can opt in to use **gRPC** instead, for this use case.
+    Check [Installation](#installation).
+- **macvlan** - used to connect to external resources, i.e. any physical or
+  virtual device outside of the Kubernetes cluster
 
-Topology information, represented as a list of links per pod, is stored in k8s's etcd datastore as custom resources:
+Topology information, represented as a list of links per pod, is stored in k8s's
+etcd datastore as custom resources:
 
 ```yaml
 apiVersion: networkop.co.uk/v1beta1
@@ -39,7 +52,8 @@ spec:
       peer_ip: 12.12.12.2/24
 ```
 
-The plugin configuration file contains a "chained" `meshnet` in the list of plugins:
+The plugin configuration file contains a "chained" `meshnet` in the list of
+plugins:
 
 ```yaml
 {
@@ -67,27 +81,46 @@ The plugin configuration file contains a "chained" `meshnet` in the list of plug
 
 The plugin consists of three main components:
 
-- **datastore** - a k8s native etcd backend cluster storing topology information and runtime pod metadata (e.g. pod IP address and NetNS)
+- **datastore** - a k8s native etcd backend cluster storing topology
+  information and runtime pod metadata (e.g. pod IP address and NetNS)
 - **meshnet** - a CNI binary responsible for pod's network configuration
-- **meshnetd** - a daemon responsible for communication with k8s and vxlan (or grpc) link configuration updates
+- **meshnetd** - a daemon responsible for communication with k8s and vxlan (or
+  grpc) link configuration updates
 
 ![architecture](arch_v0_2_0.png)
 
-Below is the order of operation of the plugin from the perspective of kube-node-1:
+Below is the order of operation of the plugin from the perspective of
+kube-node-1:
 
-1. Kubernetes cluster gets populated with the topology information via custom resources
-2. pod-1/pod-2 come up, local kubelet calls the `meshnet` binary for each pod to setup their networking.
-3. Based on the CNI configuration file, Kubelet calls meshnet to set up additional interfaces.
+1.  Kubernetes cluster gets populated with the topology information via custom
+    resources
+2.  pod-1/pod-2 come up, local kubelet calls the `meshnet` binary for each pod
+    to setup their networking.
+3.  Based on the CNI configuration file, Kubelet calls meshnet to set up
+    additional interfaces.
 
-   > Note that `eth0` is **always** setup by one of the existing CNI plugins. It is used to provide external connectivity to and from the pod
+    > Note that `eth0` is **always** setup by one of the existing CNI plugins.
+    > It is used to provide external connectivity to and from the pod
 
-4. meshnet binary updates the topology data with pod's runtime metadata (namespace filepath and primary IP address).
-5. meshnet binary (via a local meshnet daemon) retrieves the list of `links` and looks up peer pod's metadata to identify what kind of link to setup - veth, vxlan or macvlan.
-6. If the peer is on the same node, it calls koko to setup a `veth` link between the two pods.
-7. If the peer is on the remote node, it does two things:
-   - 7.1 It calls koko to setup a local `vxlan` link.
-   - 7.2 It makes a gRPC `Update` call to the remote node's meshnet daemon, specifying this link's metadata (e.g. VTEP IP and VNI).
-8. Upon receipt of this information, remote node's `meshnetd` idepmotently updates the local vxlan link, i.e. it creates a new link, updates the existing link if there's a change or does nothing if the link attributes are the same.
+4.  meshnet binary updates the topology data with pod's runtime metadata
+    (namespace filepath and primary IP address).
+
+5.  meshnet binary (via a local meshnet daemon) retrieves the list of `links`
+    and looks up peer pod's metadata to identify what kind of link to setup -
+    veth, vxlan or macvlan.
+
+6.  If the peer is on the same node, it calls koko to setup a `veth` link
+    between the two pods.
+
+7.  If the peer is on the remote node, it does two things:
+    - 7.1 It calls koko to setup a local `vxlan` link.
+    - 7.2 It makes a gRPC `Update` call to the remote node's meshnet daemon,
+      specifying this link's metadata (e.g. VTEP IP and VNI).
+
+8.  Upon receipt of this information, remote node's `meshnetd` idepmotently
+    updates the local vxlan link, i.e. it creates a new link, updates the
+    existing link if there's a change or does nothing if the link attributes are
+    the same.
 
 ## Local Demo
 
@@ -156,7 +189,8 @@ make down
 
 ## Installation
 
-The following manifest will create all that's required for meshnet plugin to function, i.e.:
+The following manifest will create all that's required for meshnet plugin to
+function, i.e.:
 
 - A `meshnet` namespace
 - A Custom Resource Definition for network topologies
@@ -172,9 +206,15 @@ kubectl apply -k manifests/overlays/grpc-link
 
 #### Interaction with existing resources
 
-Meshnet plugin was designed to work alongside any other existing or future Kubernetes resources that may not require any special topology to be set up for them. Every pod coming up will have its first interface setup by an existing CNI plugin (e.g. flannel, weave, calico) and will only have additional interfaces connected if there's a matching custom `Topology` resource.
+Meshnet plugin was designed to work alongside any other existing or future
+Kubernetes resources that may not require any special topology to be set up for
+them. Every pod coming up will have its first interface setup by an existing CNI
+plugin (e.g. flannel, weave, calico) and will only have additional interfaces
+connected if there's a matching custom `Topology` resource.
 
-During the initial installation process, meshnet will try to insert itself into the list of CNI plugins. For example, assuming the following configuration is present in `/etc/cni/net.d/weave.conf`:
+During the initial installation process, meshnet will try to insert itself into
+the list of CNI plugins. For example, assuming the following configuration is
+present in `/etc/cni/net.d/weave.conf`:
 
 ```json
 {
@@ -184,7 +224,8 @@ During the initial installation process, meshnet will try to insert itself into 
 }
 ```
 
-Meshnet will convert the above to conflist and produce the file `/etc/cni/net.d/00-meshnet.conflist` with the following content:
+Meshnet will convert the above to conflist and produce the file
+`/etc/cni/net.d/00-meshnet.conflist` with the following content:
 
 ```json
 {
@@ -208,19 +249,28 @@ Meshnet will convert the above to conflist and produce the file `/etc/cni/net.d/
 
 ### Customising installation paths
 
-In some cases, Kubernetes distros may store CNI configuration files and binaries in non-standard directories and override them with `--cni-bin-dir` and `--cni-conf-dir` flags. In order to install meshnet into the right directories, create a new overlay under `manifests/overlays` and patch the `cni-dir` or `cni-bin` volumes with the correct location. See [kops overlay](manifests/overlays/kops) for an example.
+In some cases, Kubernetes distros may store CNI configuration files and binaries
+in non-standard directories and override them with `--cni-bin-dir` and
+`--cni-conf-dir` flags. In order to install meshnet into the right directories,
+create a new overlay under `manifests/overlays` and patch the `cni-dir` or
+`cni-bin` volumes with the correct location. See
+[kops overlay](manifests/overlays/kops) for an example.
 
 ### Resilient topologies
 
-If you need to have Pods restarted and re-scheduled by the kube-controller, it's possible to deploy them as StatefulSets with replica number = 1. See [this example](/tests/2node-sts.yml).
+If you need to have Pods restarted and re-scheduled by the kube-controller, it's
+possible to deploy them as StatefulSets with replica number = 1. See
+[this example](/tests/2node-sts.yml).
 
 ### Examples
 
-Inside the `tests` directory there are 4 manifests with the following test topologies:
+Inside the `tests` directory there are 4 manifests with the following test
+topologies:
 
 - A simple point-to-point 2-node topology
 - A 3-node topology connected as a triangle
-- A 5-node topology connected as [quincunx](https://en.wikipedia.org/wiki/Quincunx)
+- A 5-node topology connected as
+  [quincunx](https://en.wikipedia.org/wiki/Quincunx)
 - A 2-node topology with 2nd node connected to a macvlan interface
 
 #### Use k8s-topo to orchestrate network topologies
@@ -310,25 +360,37 @@ k8s-topo --destroy examples/builder/random.yml
 
 There are two places to collect meshnet logs:
 
-1. Meshnet daemon logs can be collected outside of the Kubernetes cluster. For example, the below command will collect logs from all meshnet daemons using [stern](https://github.com/wercker/stern)
+1.  Meshnet daemon logs can be collected outside of the Kubernetes cluster. For
+    example, the below command will collect logs from all meshnet daemons using
+    [stern](https://github.com/wercker/stern)
 
-   ```sh
-   stern meshnet -n meshnet
-   ```
+    ```sh
+    stern meshnet -n meshnet
+    ```
 
-2. Meshnet plugin (binary) logs can be collected on the respective Kubernetes nodes, e.g.
+2.  Meshnet plugin (binary) logs can be collected on the respective Kubernetes
+    nodes, e.g.
 
-   ```text
-   root@kind-worker:/# journalctl -u kubelet
-   ```
+    ```text
+    root@kind-worker:/# journalctl -u kubelet
+    ```
 
 ---
 
-Each POD is supposed to run an `init-wait` container that waits for the right number of interface to be connected before passing the ball to the main container. However, sometimes, PODs restart resulting in the missing interfaces inside the main container process, since they may have been added _AFTER_ the process that reads the container interface list (e.g. qemu-kvm for VM-based containers). This is the procedure I use to identify the cause of the failure:
+Each POD is supposed to run an `init-wait` container that waits for the right
+number of interface to be connected before passing the ball to the main
+container. However, sometimes, PODs restart resulting in the missing interfaces
+inside the main container process, since they may have been added _AFTER_ the
+process that reads the container interface list (e.g. qemu-kvm for VM-based
+containers). This is the procedure I use to identify the cause of the failure:
 
-1. Identify which POD is at fault. This will most likely be the incorrect number of interfaces.
-2. Identify which interface is missing or was added last.
-3. Identify the correlation between the pair of containers interconnected by the missing interface
-4. Look for the peer container's failures using `kubectl get events --sort-by=.metadata.creationTimestamp'`
-5. Identify which k8s node this POD is running on `kubectl get pods acme-scs1001-a -o yaml | grep node`
-6. On that node check the `journalctl` for any errors associated with the POD
+1.  Identify which POD is at fault. This will most likely be the incorrect
+    number of interfaces.
+2.  Identify which interface is missing or was added last.
+3.  Identify the correlation between the pair of containers interconnected by
+    the missing interface
+4.  Look for the peer container's failures using `kubectl get events
+--sort-by=.metadata.creationTimestamp'`
+5.  Identify which k8s node this POD is running on `kubectl get pods
+acme-scs1001-a -o yaml | grep node`
+6.  On that node check the `journalctl` for any errors associated with the POD

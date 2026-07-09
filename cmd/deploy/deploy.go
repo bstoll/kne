@@ -84,10 +84,10 @@ func newDeployment(cfgPath string, testing bool) (*deploy.Deployment, error) {
 		return nil, err
 	}
 	if cfg.Cluster == nil {
-		return nil, fmt.Errorf("Cluster not specified")
+		return nil, fmt.Errorf("cluster not specified")
 	}
 	if cfg.Ingress == nil {
-		return nil, fmt.Errorf("Ingress not specified")
+		return nil, fmt.Errorf("ingress not specified")
 	}
 	if cfg.CNI == nil {
 		return nil, fmt.Errorf("CNI not specified")

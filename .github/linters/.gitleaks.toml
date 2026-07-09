@@ -209,6 +209,7 @@ title = "gitleaks config"
     paths = [
         '''^\.?gitleaks.toml$''',
         '''topo/node/srl/generate_certificate_success$''', # exclude dummy test file with random cert
+        '''x/webhook/manifests/tls\.secret\.yaml$''',
         '''(.*?)super-linter.log$''', # exclude linter logs which might contain past errored runs with keys/certs
         '''(.*?)(png|jpg|gif|doc|docx|pdf|bin|xls|pyc|zip)$''',
         '''(go.mod|go.sum)$'''

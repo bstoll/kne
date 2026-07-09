@@ -1,5 +1,6 @@
 # external.yaml cluster config file sets up ingress, cni, and controllers in an existing k8 cluster.
 # The "external" cluster lifecycle is not managed by the KNE deployment.
+---
 cluster:
   kind: External
 ingress:

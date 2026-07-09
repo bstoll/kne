@@ -160,7 +160,7 @@ var clientFn = func(c *rest.Config) (clientset.Interface, error) {
 }
 
 func (n *Node) Create(ctx context.Context) error {
-	switch n.Impl.Proto.Model {
+	switch n.Proto.Model {
 	case modelLemming:
 		return n.lemmingCreate(ctx)
 	case modelMagna:
@@ -236,19 +236,19 @@ func (n *Node) lemmingCreate(ctx context.Context) error {
 }
 
 func (n *Node) Status(ctx context.Context) (node.Status, error) {
-	switch n.Impl.Proto.Model {
+	switch n.Proto.Model {
 	case modelMagna:
 		// magna's status uses the standard underlying node implementation.
 		return n.Impl.Status(ctx)
 	case modelLemming:
 		return n.lemmingStatus(ctx)
 	default:
-		return node.StatusUnknown, fmt.Errorf("invalid model specified.")
+		return node.StatusUnknown, fmt.Errorf("invalid model specified")
 	}
 }
 
 func (n *Node) DefaultNodeConstraints() node.Constraints {
-	switch n.Impl.Proto.Model {
+	switch n.Proto.Model {
 	case modelLemming:
 		return defaultLemmingConstraints
 	default:
@@ -278,7 +278,7 @@ func (n *Node) lemmingStatus(ctx context.Context) (node.Status, error) {
 }
 
 func (n *Node) Delete(ctx context.Context) error {
-	switch n.Impl.Proto.Model {
+	switch n.Proto.Model {
 	case modelMagna:
 		// magna's implementation uses the standard underlying node implementation.
 		return n.Impl.Delete(ctx)

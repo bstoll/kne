@@ -151,7 +151,11 @@ func (w *Wire) Transmit(ctx context.Context, stream Stream) error {
 	})
 	g.Go(func() error {
 		if cs, ok := stream.(grpc.ClientStream); ok {
-			defer cs.CloseSend()
+			defer func() {
+				if err := cs.CloseSend(); err != nil {
+					log.Warningf("Failed to close send stream: %v", err)
+				}
+			}()
 		}
 		for {
 			data, err := w.src.Read()
