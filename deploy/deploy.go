@@ -110,7 +110,10 @@ type Deployment struct {
 }
 
 func (d *Deployment) String() string {
-	b, _ := json.MarshalIndent(d, "", "\t")
+	b, err := json.MarshalIndent(d, "", "\t")
+	if err != nil {
+		return fmt.Sprintf("Deployment: %+v (marshal error: %v)", *d, err)
+	}
 	return string(b)
 }
 
@@ -219,7 +222,7 @@ func (d *Deployment) Deploy(ctx context.Context, kubecfg string) (rerr error) {
 
 	ctx, cancel := context.WithCancel(ctx)
 
-	// Watch the containter status of the pods so we can fail if a container fails to start running.
+	// Watch the container status of the pods so we can fail if a container fails to start running.
 	if w, err := pods.NewWatcher(ctx, kClient, cancel); err != nil {
 		log.Warningf("Failed to start pod watcher: %v", err)
 	} else {

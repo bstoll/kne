@@ -13,7 +13,7 @@ import (
 
 var yamlNodeType = reflect.TypeOf(yaml.Node{})
 
-// open is overriden in tests.
+// open is overridden in tests.
 var open = os.Open
 
 // A Spec represents a structure that yaml can be decoded into.  The type is the
@@ -43,7 +43,7 @@ func Register(kind string, spec *Spec) {
 // A Config represents a KNE deployment configuration.
 type Config struct {
 	Path       string      // Path of the configuration file
-	Dir        string      // Absolute path of the diretory Path is in
+	Dir        string      // Absolute path of the directory Path is in
 	Config     interface{} // The configuration structure
 	Deployment interface{} // Filled by Config.Decode
 
@@ -179,7 +179,7 @@ func (c *Config) decode(v reflect.Value, path []string, tag reflect.StructTag) (
 				}
 			case "spec":
 				if sf.Type != yamlNodeType {
-					return fmt.Errorf("%s is not of type %v\n", strings.Join(append(path, sf.Name), "."), yamlNodeType)
+					return fmt.Errorf("%s is not of type %v", strings.Join(append(path, sf.Name), "."), yamlNodeType)
 				}
 				node := sv.Interface().(yaml.Node)
 				spec = &node
@@ -193,9 +193,9 @@ func (c *Config) decode(v reflect.Value, path []string, tag reflect.StructTag) (
 		switch {
 		case kind == "" && spec == nil:
 		case kind == "":
-			return fmt.Errorf("spec field without kind: %s\n", strings.Join(path, "."))
+			return fmt.Errorf("spec field without kind: %s", strings.Join(path, "."))
 		case spec == nil:
-			return fmt.Errorf("kind field without spec: %s\n", strings.Join(path, "."))
+			return fmt.Errorf("kind field without spec: %s", strings.Join(path, "."))
 		default:
 			// kind and spec have been supplied.
 
