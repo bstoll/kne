@@ -259,7 +259,7 @@ func (n *Node) CreateCRD(ctx context.Context) error {
 		},
 	}
 	for label, v := range proto.GetLabels() {
-		device.ObjectMeta.Labels[label] = v
+		device.Labels[label] = v
 	}
 	for _, service := range proto.GetServices() {
 		insidePort := service.Inside
@@ -396,7 +396,7 @@ func (n *Node) ConfigPush(ctx context.Context, r io.Reader) error {
 	}
 
 	if resp.Failed == nil {
-		log.Infof("%s - finished config push", n.Impl.Proto.Name)
+		log.Infof("%s - finished config push", n.Proto.Name)
 	}
 
 	return resp.Failed
@@ -422,7 +422,7 @@ func (n *Node) ResetCfg(ctx context.Context) error {
 	}
 
 	if resp.Failed == nil {
-		log.Infof("%s - finshed resetting config", n.Name())
+		log.Infof("%s - finished resetting config", n.Name())
 	}
 
 	return resp.Failed
@@ -504,7 +504,7 @@ func (n *Node) FixInterfaces() error {
 	for k, v := range n.Proto.Interfaces {
 		switch {
 		default:
-			return fmt.Errorf("Unrecognized interface name: %s", v.Name)
+			return fmt.Errorf("unrecognized interface name: %s", v.Name)
 		case !strings.HasPrefix(k, "eth"), ethIntfRe.MatchString(v.Name), mgmtIntfRe.MatchString(v.Name):
 		case v.Name == "":
 			n.Proto.Interfaces[k].Name = fmt.Sprintf("Ethernet%s", strings.TrimPrefix(k, "eth"))

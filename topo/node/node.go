@@ -29,7 +29,7 @@ import (
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/remotecommand"
 	log "k8s.io/klog/v2"
-	"k8s.io/utils/pointer"
+	"k8s.io/utils/ptr"
 )
 
 type Interface interface {
@@ -286,7 +286,7 @@ func validateBoundedInteger(nodeConstraint *tpb.BoundedInteger, hostCons int) er
 	if nodeConstraint.MinValue > nodeConstraint.MaxValue {
 		return fmt.Errorf("invalid bounds. Max value %d is less than min value %d", nodeConstraint.MaxValue, nodeConstraint.MinValue)
 	}
-	if !(nodeConstraint.MinValue <= int64(hostCons) && int64(hostCons) <= nodeConstraint.MaxValue) {
+	if int64(hostCons) < nodeConstraint.MinValue || int64(hostCons) > nodeConstraint.MaxValue {
 		return fmt.Errorf("invalid bounded integer constraint. min: %d max %d constraint data %d",
 			nodeConstraint.MinValue, nodeConstraint.MaxValue, hostCons)
 	}
@@ -429,10 +429,10 @@ func (n *Impl) CreatePod(ctx context.Context) error {
 				Resources:       ToResourceRequirements(pb.Constraints),
 				ImagePullPolicy: "IfNotPresent",
 				SecurityContext: &corev1.SecurityContext{
-					Privileged: pointer.Bool(true),
+					Privileged: ptr.To(true),
 				},
 			}},
-			TerminationGracePeriodSeconds: pointer.Int64(0),
+			TerminationGracePeriodSeconds: ptr.To(int64(0)),
 			NodeSelector:                  map[string]string{},
 			Affinity: &corev1.Affinity{
 				PodAntiAffinity: &corev1.PodAntiAffinity{
@@ -454,7 +454,7 @@ func (n *Impl) CreatePod(ctx context.Context) error {
 		},
 	}
 	for label, v := range n.GetProto().GetLabels() {
-		pod.ObjectMeta.Labels[label] = v
+		pod.Labels[label] = v
 	}
 	if pb.Config.ConfigData != nil {
 		vol, err := n.CreateConfig(ctx)
@@ -467,7 +467,7 @@ func (n *Impl) CreatePod(ctx context.Context) error {
 			MountPath: pb.Config.ConfigPath + "/" + pb.Config.ConfigFile,
 			ReadOnly:  true,
 		}
-		if vol.VolumeSource.ConfigMap != nil {
+		if vol.ConfigMap != nil {
 			vm.SubPath = pb.Config.ConfigFile
 		}
 		for i, c := range pod.Spec.Containers {
@@ -531,7 +531,7 @@ func (n *Impl) CreateService(ctx context.Context) error {
 			// Large topologies may try to allocate more NodePorts than are
 			// supported in default clusters.
 			// https://kubernetes.io/docs/concepts/services-networking/service/#load-balancer-nodeport-allocation
-			AllocateLoadBalancerNodePorts: pointer.Bool(false),
+			AllocateLoadBalancerNodePorts: ptr.To(false),
 		},
 	}
 	sS, err := n.KubeClient.CoreV1().Services(n.Namespace).Create(ctx, s, metav1.CreateOptions{})
@@ -573,7 +573,7 @@ func (n *Impl) DeleteConfig(ctx context.Context) error {
 			}
 			log.V(1).Infof("Deleted config file %s", path)
 		case vs.ConfigMap != nil:
-			name := vs.ConfigMap.LocalObjectReference.Name
+			name := vs.ConfigMap.Name
 			if err := n.KubeClient.CoreV1().ConfigMaps(n.Namespace).Delete(ctx, name, metav1.DeleteOptions{}); err != nil {
 				return err
 			}
@@ -589,7 +589,7 @@ func (n *Impl) DeleteService(ctx context.Context) error {
 		TypeMeta: metav1.TypeMeta{
 			APIVersion: "v1",
 		},
-		GracePeriodSeconds: pointer.Int64(0),
+		GracePeriodSeconds: ptr.To(int64(0)),
 	})
 }
 
@@ -627,6 +627,7 @@ func (n *Impl) Exec(ctx context.Context, cmd []string, stdin io.Reader, stdout i
 		return err
 	}
 	log.Infof("Execing %s on %s", cmd, n.Name())
+	//nolint:staticcheck
 	return exec.Stream(remotecommand.StreamOptions{
 		Stdin:  stdin,
 		Stdout: stdout,
@@ -725,9 +726,13 @@ func (n *Impl) PatchCLIConnOpen(bin string, cliCmd []string, opts []scrapliutil.
 // for a given platform. Retries indefinitely till success and returns a scrapligo network driver instance.
 func (n *Impl) GetCLIConn(platform string, opts []scrapliutil.Option) (*scraplinetwork.Driver, error) {
 	if log.V(1).Enabled() {
-		li, _ := scraplilogging.NewInstance(scraplilogging.WithLevel("debug"),
+		li, err := scraplilogging.NewInstance(scraplilogging.WithLevel("debug"),
 			scraplilogging.WithLogger(log.Info))
-		opts = append(opts, scrapliopts.WithLogger(li))
+		if err != nil {
+			log.Warningf("Failed to create scrapli logging instance: %v", err)
+		} else {
+			opts = append(opts, scrapliopts.WithLogger(li))
+		}
 	}
 
 	for {
@@ -773,10 +778,10 @@ func GetNodeLinks(n *tpb.Node) ([]topologyv1.Link, error) {
 			continue
 		}
 		if ifc.PeerIntName == "" {
-			return nil, fmt.Errorf("interface %q PeerIntName canot be empty", ifcName)
+			return nil, fmt.Errorf("interface %q PeerIntName cannot be empty", ifcName)
 		}
 		if ifc.PeerName == "" {
-			return nil, fmt.Errorf("interface %q PeerName canot be empty", ifcName)
+			return nil, fmt.Errorf("interface %q PeerName cannot be empty", ifcName)
 		}
 		links = append(links, topologyv1.Link{
 			UID:       int(ifc.Uid),

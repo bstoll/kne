@@ -37,7 +37,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/rest"
 	log "k8s.io/klog/v2"
-	"k8s.io/utils/pointer"
+	"k8s.io/utils/ptr"
 )
 
 const (
@@ -161,7 +161,7 @@ func (n *Node) Create(ctx context.Context) error {
 		initContainerImage = node.DefaultInitContainerImage
 	}
 	secContext := &corev1.SecurityContext{
-		Privileged: pointer.Bool(true),
+		Privileged: ptr.To(true),
 	}
 	tty := false
 	stdin := false
@@ -169,8 +169,8 @@ func (n *Node) Create(ctx context.Context) error {
 	// terminal. This is not required for 8000e nodes.
 	if pb.Model == ModelXRD {
 		secContext = &corev1.SecurityContext{
-			Privileged: pointer.Bool(true),
-			RunAsUser:  pointer.Int64(0),
+			Privileged: ptr.To(true),
+			RunAsUser:  ptr.To(int64(0)),
 			Capabilities: &corev1.Capabilities{
 				Add: []corev1.Capability{"SYS_ADMIN"},
 			},
@@ -221,7 +221,7 @@ func (n *Node) Create(ctx context.Context) error {
 					},
 				},
 			}},
-			TerminationGracePeriodSeconds: pointer.Int64(0),
+			TerminationGracePeriodSeconds: ptr.To(int64(0)),
 			NodeSelector:                  map[string]string{},
 			Affinity: &corev1.Affinity{
 				PodAntiAffinity: &corev1.PodAntiAffinity{
@@ -243,7 +243,7 @@ func (n *Node) Create(ctx context.Context) error {
 		},
 	}
 	for label, v := range n.GetProto().GetLabels() {
-		pod.ObjectMeta.Labels[label] = v
+		pod.Labels[label] = v
 	}
 	if pb.Config.ConfigData != nil {
 		vol, err := n.CreateConfig(ctx)
@@ -256,7 +256,7 @@ func (n *Node) Create(ctx context.Context) error {
 			MountPath: pb.Config.ConfigPath + "/" + pb.Config.ConfigFile,
 			ReadOnly:  true,
 		}
-		if vol.VolumeSource.ConfigMap != nil {
+		if vol.ConfigMap != nil {
 			vm.SubPath = pb.Config.ConfigFile
 		}
 		for i, c := range pod.Spec.Containers {
@@ -277,10 +277,10 @@ func (n *Node) Create(ctx context.Context) error {
 }
 
 // DefaultNodeConstraints returns default node constraints for CISCO.
-// If the model for 8000e is specificied correctly it returns defaults for 8000e.
+// If the model for 8000e is specified correctly it returns defaults for 8000e.
 // Otherwise, it returns defaults for XRD by default.
 func (n *Node) DefaultNodeConstraints() node.Constraints {
-	if n.Impl == nil || n.Impl.Proto == nil {
+	if n.Impl == nil || n.Proto == nil {
 		return defaultXRDConstraints
 	}
 	switch n.GetProto().Model {
@@ -292,7 +292,7 @@ func (n *Node) DefaultNodeConstraints() node.Constraints {
 	return defaultXRDConstraints
 }
 
-// validateHostConstraints - Validates host contraints through the default node's implementation. It skips the validation optionally
+// validateHostConstraints - Validates host constraints through the default node's implementation. It skips the validation optionally
 // based on skipValidation flag which is useful for unit tests
 func validateHostConstraints(n *Node, skipValidation bool) error {
 	if skipValidation {
@@ -409,7 +409,10 @@ func getCiscoInterfaceID(pb *tpb.Node, eth string) (string, error) {
 		return pb.Interfaces[eth].Name, nil
 	}
 	// ethWithIDRegx.MatchString(eth) was successful, so no need to do extra check here
-	ethID, _ := strconv.Atoi(ethRegx.Split(eth, -1)[1])
+	ethID, err := strconv.Atoi(ethRegx.Split(eth, -1)[1])
+	if err != nil {
+		return "", fmt.Errorf("failed to parse interface ID from %q: %w", eth, err)
+	}
 	eid := ethID - 1
 	switch pb.Model {
 	case "8201":
@@ -657,8 +660,8 @@ func endTelnet(d *scraplinetwork.Driver) error {
 	// sending ctrl + ] (^]) to end telnet session gracefully. Otherwise, the next connection can be blocked.
 	endTelnet := string(byte(29)) + " quit\n"
 	log.Infof("Closing the connection by sending ctrl+] quit \n")
-	d.SendCommand(endTelnet)
-	return nil
+	_, err := d.SendCommand(endTelnet)
+	return err
 }
 
 func (n *Node) ResetCfg(ctx context.Context) error {
@@ -671,9 +674,9 @@ func (n *Node) ResetCfg(ctx context.Context) error {
 
 	var cmd string
 	if n.Proto.Model == ModelXRD {
-		// Copy the snooped management interface config from a know location and the startup config from
+		// Copy the snooped management interface config from a known location and the startup config from
 		// the mounted location so it can be applied. This is required to preserve the snooped management
-		// IP addres and since the "copy" xr_cli command can only access files on disk 0/1.
+		// IP address and since the "copy" xr_cli command can only access files on disk 0/1.
 		startup_config := n.Proto.Config.Env["XR_EVERY_BOOT_CONFIG"]
 		if startup_config == "" {
 			return status.Errorf(codes.InvalidArgument, "XR_EVERY_BOOT_CONFIG is not set")
@@ -748,7 +751,7 @@ func (n *Node) ConfigPush(ctx context.Context, r io.Reader) error {
 		return err
 	}
 	if resp.Failed == nil {
-		log.Infof("%s - finished config push", n.Impl.Proto.Name)
+		log.Infof("%s - finished config push", n.Proto.Name)
 	}
 
 	return resp.Failed
@@ -757,7 +760,7 @@ func (n *Node) ConfigPush(ctx context.Context, r io.Reader) error {
 func (n *Node) GenerateSelfSigned(context.Context) error {
 	// IOS XR automatically generates a self-signed certificate when gRPC is first enabled.
 	// If the startup configuration contains a gRPC configuration, or if the user configures
-	// gRPC after bootup, the self-signed cert will automatically be created and used.
+	// gRPC after boot up, the self-signed cert will automatically be created and used.
 	return status.Errorf(codes.Unimplemented, "certificate generation is not supported")
 }
 
