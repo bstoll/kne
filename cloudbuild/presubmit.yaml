@@ -1,3 +1,4 @@
+---
 steps:
   - id: kne_test
     name: us-west1-docker.pkg.dev/$PROJECT_ID/utilities/remote-builder
@@ -26,4 +27,4 @@ timeout: 2700s
 
 options:
   pool:
-    name: 'projects/kne-external/locations/us-central1/workerPools/kne-cloudbuild-pool'
+    name: "projects/kne-external/locations/us-central1/workerPools/kne-cloudbuild-pool"
