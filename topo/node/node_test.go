@@ -15,7 +15,7 @@ import (
 	"k8s.io/apimachinery/pkg/util/intstr"
 	kfake "k8s.io/client-go/kubernetes/fake"
 	"k8s.io/client-go/rest"
-	"k8s.io/utils/pointer"
+	"k8s.io/utils/ptr"
 )
 
 func NewNR(impl *Impl) (Node, error) {
@@ -160,18 +160,18 @@ func TestCreateConfig(t *testing.T) {
 			},
 		},
 	}, {
-		desc: "config file dne",
+		desc: "config file does not exist",
 		node: &topopb.Node{
 			Name:   "dev1",
 			Vendor: topopb.Vendor(1001),
 			Config: &topopb.Config{
 				ConfigFile: "test.cfg",
 				ConfigData: &topopb.Config_File{
-					File: "testdata/dne.cfg",
+					File: "testdata/nonexistent.cfg",
 				},
 			},
 		},
-		wantErr: "open testdata/dne.cfg: no such file",
+		wantErr: "open testdata/nonexistent.cfg: no such file",
 	}}
 	for _, tt := range tests {
 		t.Run(tt.desc, func(t *testing.T) {
@@ -199,7 +199,7 @@ func TestCreateConfig(t *testing.T) {
 					t.Errorf("CreateConfig() did not create the expected file: %v", err)
 				}
 			case vs.ConfigMap != nil:
-				gotCM, err := n.KubeClient.CoreV1().ConfigMaps(n.Namespace).Get(ctx, vs.ConfigMap.LocalObjectReference.Name, metav1.GetOptions{})
+				gotCM, err := n.KubeClient.CoreV1().ConfigMaps(n.Namespace).Get(ctx, vs.ConfigMap.Name, metav1.GetOptions{})
 				if err != nil {
 					t.Errorf("CreateConfig() did not create the expected configmap: %v", err)
 				}
@@ -255,7 +255,7 @@ func TestService(t *testing.T) {
 				}},
 				Selector:                      map[string]string{"app": "dev1"},
 				Type:                          "LoadBalancer",
-				AllocateLoadBalancerNodePorts: pointer.Bool(false),
+				AllocateLoadBalancerNodePorts: ptr.To(false),
 			},
 		}},
 	}, {
@@ -301,7 +301,7 @@ func TestService(t *testing.T) {
 				}},
 				Selector:                      map[string]string{"app": "dev2"},
 				Type:                          "LoadBalancer",
-				AllocateLoadBalancerNodePorts: pointer.Bool(false),
+				AllocateLoadBalancerNodePorts: ptr.To(false),
 			},
 		}},
 	}, {
@@ -365,7 +365,7 @@ func TestValidateConstraints(t *testing.T) {
 		constraintValues map[string]int
 	}{
 		{
-			desc: "Invalid case - contraint value is greater than upper bound",
+			desc: "Invalid case - constraint value is greater than upper bound",
 			node: &topopb.Node{
 				Name: "node1",
 				HostConstraints: []*topopb.HostConstraint{

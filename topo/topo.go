@@ -410,7 +410,10 @@ func (m *Manager) Show(ctx context.Context) (*cpb.ShowTopologyResponse, error) {
 	}
 	stateMap := &stateMap{}
 	for _, n := range m.nodes {
-		phase, _ := n.Status(ctx)
+		phase, err := n.Status(ctx)
+		if err != nil {
+			return nil, err
+		}
 		stateMap.setNodeState(n.Name(), phase)
 	}
 	return &cpb.ShowTopologyResponse{
@@ -531,8 +534,8 @@ func setLinkPeer(nodeName string, podName string, link *topologyv1.Link, peerSpe
 	for _, peerSpec := range peerSpecs {
 		for _, peerLink := range peerSpec.Spec.Links {
 			// make sure self ifc and peer ifc belong to same link (and hence UID) but are not the same interfaces
-			if peerLink.UID == link.UID && !(nodeName == link.PeerPod && peerLink.LocalIntf == link.LocalIntf) {
-				link.PeerPod = peerSpec.ObjectMeta.Name
+			if peerLink.UID == link.UID && (nodeName != link.PeerPod || peerLink.LocalIntf != link.LocalIntf) {
+				link.PeerPod = peerSpec.Name
 				link.PeerIntf = peerLink.LocalIntf
 				return nil
 			}
@@ -569,7 +572,7 @@ func (m *Manager) topologySpecs(ctx context.Context) ([]*topologyv1.Topology, er
 					return nil, fmt.Errorf("specs do not exist for node %s", link.PeerPod)
 				}
 
-				if err := setLinkPeer(nodeName, spec.ObjectMeta.Name, link, peerSpecs); err != nil {
+				if err := setLinkPeer(nodeName, spec.Name, link, peerSpecs); err != nil {
 					return nil, err
 				}
 			}
@@ -678,10 +681,10 @@ func (m *Manager) createMeshnetTopologies(ctx context.Context) error {
 	}
 	log.V(2).Infof("Got topology specs for namespace %s: %+v", m.topo.Name, topologies)
 	for _, t := range topologies {
-		log.Infof("Creating topology for meshnet node %s", t.ObjectMeta.Name)
+		log.Infof("Creating topology for meshnet node %s", t.Name)
 		sT, err := m.tClient.Topology(m.topo.Name).Create(ctx, t, metav1.CreateOptions{})
 		if err != nil {
-			return fmt.Errorf("could not create topology for meshnet node %s: %v", t.ObjectMeta.Name, err)
+			return fmt.Errorf("could not create topology for meshnet node %s: %v", t.Name, err)
 		}
 		log.V(1).Infof("Meshnet Node:\n%+v\n", sT)
 	}
@@ -696,8 +699,8 @@ func (m *Manager) deleteMeshnetTopologies(ctx context.Context) error {
 	}
 	var errs errlist.List
 	for _, n := range nodes {
-		if err := m.tClient.Topology(m.topo.Name).Delete(ctx, n.ObjectMeta.Name, metav1.DeleteOptions{}); err != nil {
-			errs.Add(fmt.Errorf("failed to delete meshnet node %q: %w", n.ObjectMeta.Name, err))
+		if err := m.tClient.Topology(m.topo.Name).Delete(ctx, n.Name, metav1.DeleteOptions{}); err != nil {
+			errs.Add(fmt.Errorf("failed to delete meshnet node %q: %w", n.Name, err))
 		}
 	}
 	return errs.Err()
@@ -719,7 +722,7 @@ func (m *Manager) checkNodeStatus(ctx context.Context, timeout time.Duration) er
 
 			phase, err := n.Status(ctx)
 			if err != nil || phase == node.StatusFailed {
-				return fmt.Errorf("Node %s: Status %s Reason %v", n, phase, err)
+				return fmt.Errorf("node %s: status %s reason %v", n, phase, err)
 			}
 			if phase == node.StatusRunning {
 				log.Infof("Node %s: Status %s", n, phase)

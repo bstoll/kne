@@ -211,7 +211,7 @@ func (n *Node) ConfigPush(ctx context.Context, r io.Reader) error {
 	}
 
 	if resp.Failed != nil {
-		log.Infof("%s - failed saving config to file", n.Impl.Proto.Name)
+		log.Infof("%s - failed saving config to file", n.Proto.Name)
 
 		return resp.Failed
 	}
@@ -228,7 +228,7 @@ func (n *Node) ConfigPush(ctx context.Context, r io.Reader) error {
 	}
 
 	if mresp.Failed != nil {
-		log.Infof("%s - failed config push", n.Impl.Proto.Name)
+		log.Infof("%s - failed config push", n.Proto.Name)
 
 		return resp.Failed
 	}
