@@ -111,11 +111,11 @@ func TestRunCommand(t *testing.T) {
 			if string(got) != tt.want {
 				t.Errorf("runCommand() got output %v, want %v", string(got), tt.want)
 			}
-			if string(infos.Bytes()) != tt.wantInfos {
-				t.Errorf("runCommand() got info logs %v, want %v", string(infos.Bytes()), tt.wantInfos)
+			if infos.String() != tt.wantInfos {
+				t.Errorf("runCommand() got info logs %v, want %v", infos.String(), tt.wantInfos)
 			}
-			if string(warnings.Bytes()) != tt.wantWarnings {
-				t.Errorf("runCommand() got warning logs %v, want %v", string(warnings.Bytes()), tt.wantWarnings)
+			if warnings.String() != tt.wantWarnings {
+				t.Errorf("runCommand() got warning logs %v, want %v", warnings.String(), tt.wantWarnings)
 			}
 		})
 	}

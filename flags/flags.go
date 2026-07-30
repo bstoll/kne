@@ -35,7 +35,9 @@ func Import(defmap map[string]string) {
 	flag.Set("stderrthreshold", "INFO")                   //nolint:errcheck
 	for k, v := range defmap {
 		if f := flag.Lookup(k); f != nil {
-			f.Value.Set(v)
+			if err := f.Value.Set(v); err != nil {
+				klog.Warningf("Failed to set default value %q for flag %q: %v", v, k, err)
+			}
 			f.DefValue = v
 		}
 	}
