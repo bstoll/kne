@@ -28,8 +28,8 @@ cluster:
   spec:
     name: kne
     recycle: True
-    version: 0.11.1
-    image: kindest/node:v1.22.0
+    version: 0.32.0
+    image: kindest/node:v1.36.1
 ingress:
   kind: MetalLB
   spec:
@@ -46,8 +46,8 @@ cluster:
   spec:
     name: kne
     recycle: True
-    version: 0.11.1
-    image: kindest/node:v1.22.0
+    version: 0.32.0
+    image: kindest/node:v1.36.1
 ingress:
   kind: InvalidIngress
   spec:
@@ -64,8 +64,8 @@ cluster:
   spec:
     name: kne
     recycle: True
-    version: 0.11.1
-    image: kindest/node:v1.22.0
+    version: 0.32.0
+    image: kindest/node:v1.36.1
 ingress:
   kind: MetalLB
   spec:
@@ -82,8 +82,8 @@ cluster:
   spec:
     name: kne
     recycle: True
-    version: 0.11.1
-    image: kindest/node:v1.22.0
+    version: 0.32.0
+    image: kindest/node:v1.36.1
 ingress:
   kind: MetalLB
   spec:
@@ -104,8 +104,8 @@ cluster:
   spec:
     name: kne
     recycle: True
-    version: 0.11.1
-    image: kindest/node:v1.22.0
+    version: 0.32.0
+    image: kindest/node:v1.36.1
 ingress:
   kind: MetalLB
   spec:

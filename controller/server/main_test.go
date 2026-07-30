@@ -321,8 +321,8 @@ func TestNewDeployment(t *testing.T) {
 				Kind: &cpb.KindSpec{
 					Name:    "kne",
 					Recycle: true,
-					Version: "0.11.1",
-					Image:   "kindest/node:v1.22.1",
+					Version: "0.32.0",
+					Image:   "kindest/node:v1.36.1",
 				},
 			},
 			IngressSpec: &cpb.CreateClusterRequest_Metallb{
@@ -349,8 +349,8 @@ func TestNewDeployment(t *testing.T) {
 			Cluster: &deploy.KindSpec{
 				Name:    "kne",
 				Recycle: true,
-				Version: "0.11.1",
-				Image:   "kindest/node:v1.22.1",
+				Version: "0.32.0",
+				Image:   "kindest/node:v1.36.1",
 			},
 			Ingress: &deploy.MetalLBSpec{
 				Manifest: testFile.Name(),
@@ -368,8 +368,8 @@ func TestNewDeployment(t *testing.T) {
 				Kind: &cpb.KindSpec{
 					Name:    "kne",
 					Recycle: true,
-					Version: "0.11.1",
-					Image:   "kindest/node:v1.22.1",
+					Version: "0.32.0",
+					Image:   "kindest/node:v1.36.1",
 				},
 			},
 			IngressSpec: &cpb.CreateClusterRequest_Metallb{
@@ -412,8 +412,8 @@ func TestNewDeployment(t *testing.T) {
 			Cluster: &deploy.KindSpec{
 				Name:    "kne",
 				Recycle: true,
-				Version: "0.11.1",
-				Image:   "kindest/node:v1.22.1",
+				Version: "0.32.0",
+				Image:   "kindest/node:v1.36.1",
 			},
 			Ingress: &deploy.MetalLBSpec{
 				Manifest: testFile.Name(),
@@ -437,8 +437,8 @@ func TestNewDeployment(t *testing.T) {
 				Kind: &cpb.KindSpec{
 					Name:    "kne",
 					Recycle: true,
-					Version: "0.11.1",
-					Image:   "kindest/node:v1.22.1",
+					Version: "0.32.0",
+					Image:   "kindest/node:v1.36.1",
 				},
 			},
 			IngressSpec: &cpb.CreateClusterRequest_Metallb{
@@ -476,8 +476,8 @@ func TestNewDeployment(t *testing.T) {
 			Cluster: &deploy.KindSpec{
 				Name:    "kne",
 				Recycle: true,
-				Version: "0.11.1",
-				Image:   "kindest/node:v1.22.1",
+				Version: "0.32.0",
+				Image:   "kindest/node:v1.36.1",
 			},
 			Ingress: &deploy.MetalLBSpec{
 				Manifest: testFile.Name(),
@@ -500,8 +500,8 @@ func TestNewDeployment(t *testing.T) {
 				Kind: &cpb.KindSpec{
 					Name:    "kne",
 					Recycle: true,
-					Version: "0.11.1",
-					Image:   "kindest/node:v1.22.1",
+					Version: "0.32.0",
+					Image:   "kindest/node:v1.36.1",
 				},
 			},
 			IngressSpec: &cpb.CreateClusterRequest_Metallb{
@@ -539,8 +539,8 @@ func TestNewDeployment(t *testing.T) {
 			Cluster: &deploy.KindSpec{
 				Name:    "kne",
 				Recycle: true,
-				Version: "0.11.1",
-				Image:   "kindest/node:v1.22.1",
+				Version: "0.32.0",
+				Image:   "kindest/node:v1.36.1",
 			},
 			Ingress: &deploy.MetalLBSpec{
 				Manifest: testFile.Name(),
@@ -563,8 +563,8 @@ func TestNewDeployment(t *testing.T) {
 				Kind: &cpb.KindSpec{
 					Name:    "kne",
 					Recycle: true,
-					Version: "0.11.1",
-					Image:   "kindest/node:v1.22.1",
+					Version: "0.32.0",
+					Image:   "kindest/node:v1.36.1",
 				},
 			},
 			IngressSpec: &cpb.CreateClusterRequest_Metallb{
@@ -602,8 +602,8 @@ func TestNewDeployment(t *testing.T) {
 			Cluster: &deploy.KindSpec{
 				Name:    "kne",
 				Recycle: true,
-				Version: "0.11.1",
-				Image:   "kindest/node:v1.22.1",
+				Version: "0.32.0",
+				Image:   "kindest/node:v1.36.1",
 			},
 			Ingress: &deploy.MetalLBSpec{
 				Manifest: testFile.Name(),
@@ -626,8 +626,8 @@ func TestNewDeployment(t *testing.T) {
 				Kind: &cpb.KindSpec{
 					Name:    "kne",
 					Recycle: true,
-					Version: "0.11.1",
-					Image:   "kindest/node:v1.22.1",
+					Version: "0.32.0",
+					Image:   "kindest/node:v1.36.1",
 				},
 			},
 			IngressSpec: &cpb.CreateClusterRequest_Metallb{
@@ -691,8 +691,8 @@ func TestNewDeployment(t *testing.T) {
 			Cluster: &deploy.KindSpec{
 				Name:    "kne",
 				Recycle: true,
-				Version: "0.11.1",
-				Image:   "kindest/node:v1.22.1",
+				Version: "0.32.0",
+				Image:   "kindest/node:v1.36.1",
 			},
 			Ingress: &deploy.MetalLBSpec{
 				Manifest: defTestFile.Name(),
@@ -725,8 +725,8 @@ func TestNewDeployment(t *testing.T) {
 				Kind: &cpb.KindSpec{
 					Name:    "kne",
 					Recycle: true,
-					Version: "0.11.1",
-					Image:   "kindest/node:v1.22.1",
+					Version: "0.32.0",
+					Image:   "kindest/node:v1.36.1",
 				},
 			},
 			IngressSpec: &cpb.CreateClusterRequest_Metallb{
@@ -804,8 +804,8 @@ func TestNewDeployment(t *testing.T) {
 			Cluster: &deploy.KindSpec{
 				Name:    "kne",
 				Recycle: true,
-				Version: "0.11.1",
-				Image:   "kindest/node:v1.22.1",
+				Version: "0.32.0",
+				Image:   "kindest/node:v1.36.1",
 			},
 			Ingress: &deploy.MetalLBSpec{
 				Manifest: testFile.Name(),
@@ -838,8 +838,8 @@ func TestNewDeployment(t *testing.T) {
 				Kind: &cpb.KindSpec{
 					Name:    "kne",
 					Recycle: true,
-					Version: "0.11.1",
-					Image:   "kindest/node:v1.22.1",
+					Version: "0.32.0",
+					Image:   "kindest/node:v1.36.1",
 				},
 			},
 			IngressSpec: &cpb.CreateClusterRequest_Metallb{
@@ -917,8 +917,8 @@ func TestNewDeployment(t *testing.T) {
 			Cluster: &deploy.KindSpec{
 				Name:    "kne",
 				Recycle: true,
-				Version: "0.11.1",
-				Image:   "kindest/node:v1.22.1",
+				Version: "0.32.0",
+				Image:   "kindest/node:v1.36.1",
 			},
 			Ingress: &deploy.MetalLBSpec{
 				ManifestData: testData,
@@ -951,8 +951,8 @@ func TestNewDeployment(t *testing.T) {
 				Kind: &cpb.KindSpec{
 					Name:    "kne",
 					Recycle: true,
-					Version: "0.11.1",
-					Image:   "kindest/node:v1.22.1",
+					Version: "0.32.0",
+					Image:   "kindest/node:v1.36.1",
 				},
 			},
 			IngressSpec: &cpb.CreateClusterRequest_Metallb{
@@ -990,8 +990,8 @@ func TestNewDeployment(t *testing.T) {
 			Cluster: &deploy.KindSpec{
 				Name:    "kne",
 				Recycle: true,
-				Version: "0.11.1",
-				Image:   "kindest/node:v1.22.1",
+				Version: "0.32.0",
+				Image:   "kindest/node:v1.36.1",
 			},
 			Ingress: &deploy.MetalLBSpec{
 				Manifest: testFile.Name(),
@@ -1015,8 +1015,8 @@ func TestNewDeployment(t *testing.T) {
 				Kind: &cpb.KindSpec{
 					Name:    "kne",
 					Recycle: true,
-					Version: "0.11.1",
-					Image:   "kindest/node:v1.22.1",
+					Version: "0.32.0",
+					Image:   "kindest/node:v1.36.1",
 				},
 			},
 			IngressSpec: &cpb.CreateClusterRequest_Metallb{
@@ -1059,8 +1059,8 @@ func TestNewDeployment(t *testing.T) {
 				Kind: &cpb.KindSpec{
 					Name:    "kne",
 					Recycle: true,
-					Version: "0.11.1",
-					Image:   "kindest/node:v1.22.1",
+					Version: "0.32.0",
+					Image:   "kindest/node:v1.36.1",
 				},
 			},
 			IngressSpec: &cpb.CreateClusterRequest_Metallb{
@@ -1081,8 +1081,8 @@ func TestNewDeployment(t *testing.T) {
 			Cluster: &deploy.KindSpec{
 				Name:    "kne",
 				Recycle: true,
-				Version: "0.11.1",
-				Image:   "kindest/node:v1.22.1",
+				Version: "0.32.0",
+				Image:   "kindest/node:v1.36.1",
 			},
 			Ingress: &deploy.MetalLBSpec{
 				Manifest: defTestFile.Name(),
@@ -1105,8 +1105,8 @@ func TestNewDeployment(t *testing.T) {
 				Kind: &cpb.KindSpec{
 					Name:    "kne",
 					Recycle: true,
-					Version: "0.11.1",
-					Image:   "kindest/node:v1.22.1",
+					Version: "0.32.0",
+					Image:   "kindest/node:v1.36.1",
 				},
 			},
 			IngressSpec: &cpb.CreateClusterRequest_Metallb{
@@ -1138,8 +1138,8 @@ func TestNewDeployment(t *testing.T) {
 				Kind: &cpb.KindSpec{
 					Name:    "kne",
 					Recycle: true,
-					Version: "0.11.1",
-					Image:   "kindest/node:v1.22.1",
+					Version: "0.32.0",
+					Image:   "kindest/node:v1.36.1",
 				},
 			},
 			CniSpec: &cpb.CreateClusterRequest_Meshnet{
@@ -1160,8 +1160,8 @@ func TestNewDeployment(t *testing.T) {
 				Kind: &cpb.KindSpec{
 					Name:    "kne",
 					Recycle: true,
-					Version: "0.11.1",
-					Image:   "kindest/node:v1.22.1",
+					Version: "0.32.0",
+					Image:   "kindest/node:v1.36.1",
 				},
 			},
 			IngressSpec: &cpb.CreateClusterRequest_Metallb{
@@ -1183,8 +1183,8 @@ func TestNewDeployment(t *testing.T) {
 				Kind: &cpb.KindSpec{
 					Name:    "kne",
 					Recycle: true,
-					Version: "0.11.1",
-					Image:   "kindest/node:v1.22.1",
+					Version: "0.32.0",
+					Image:   "kindest/node:v1.36.1",
 				},
 			},
 			IngressSpec: &cpb.CreateClusterRequest_Metallb{
@@ -1210,8 +1210,8 @@ func TestNewDeployment(t *testing.T) {
 				Kind: &cpb.KindSpec{
 					Name:    "kne",
 					Recycle: true,
-					Version: "0.11.1",
-					Image:   "kindest/node:v1.22.1",
+					Version: "0.32.0",
+					Image:   "kindest/node:v1.36.1",
 				},
 			},
 			IngressSpec: &cpb.CreateClusterRequest_Metallb{
@@ -1236,8 +1236,8 @@ func TestNewDeployment(t *testing.T) {
 				Kind: &cpb.KindSpec{
 					Name:    "kne",
 					Recycle: true,
-					Version: "0.11.1",
-					Image:   "kindest/node:v1.22.1",
+					Version: "0.32.0",
+					Image:   "kindest/node:v1.36.1",
 				},
 			},
 			IngressSpec: &cpb.CreateClusterRequest_Metallb{
@@ -1268,8 +1268,8 @@ func TestNewDeployment(t *testing.T) {
 				Kind: &cpb.KindSpec{
 					Name:    "kne",
 					Recycle: true,
-					Version: "0.11.1",
-					Image:   "kindest/node:v1.22.1",
+					Version: "0.32.0",
+					Image:   "kindest/node:v1.36.1",
 				},
 			},
 			IngressSpec: &cpb.CreateClusterRequest_Metallb{
@@ -1300,8 +1300,8 @@ func TestNewDeployment(t *testing.T) {
 				Kind: &cpb.KindSpec{
 					Name:    "kne",
 					Recycle: true,
-					Version: "0.11.1",
-					Image:   "kindest/node:v1.22.1",
+					Version: "0.32.0",
+					Image:   "kindest/node:v1.36.1",
 				},
 			},
 			IngressSpec: &cpb.CreateClusterRequest_Metallb{
@@ -1332,8 +1332,8 @@ func TestNewDeployment(t *testing.T) {
 				Kind: &cpb.KindSpec{
 					Name:    "kne",
 					Recycle: true,
-					Version: "0.11.1",
-					Image:   "kindest/node:v1.22.1",
+					Version: "0.32.0",
+					Image:   "kindest/node:v1.36.1",
 				},
 			},
 			IngressSpec: &cpb.CreateClusterRequest_Metallb{
