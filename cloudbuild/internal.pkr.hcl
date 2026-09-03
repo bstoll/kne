@@ -97,6 +97,7 @@ build {
       "sudo docker pull us-west1-docker.pkg.dev/gep-kne/cisco/8000e:ga & pids=\"$pids $!\"",
       "sudo docker pull us-west1-docker.pkg.dev/gep-kne/juniper/ncptx:ga & pids=\"$pids $!\"",
       "sudo docker pull us-west1-docker.pkg.dev/gep-kne/nokia/srlinux:ga & pids=\"$pids $!\"",
+      "sudo docker pull us-west1-docker.pkg.dev/kne-external/kne/meshnet:ga & pids=\"$pids $!\"",
       "echo 'Waiting for all docker pulls to complete...'",
       "for pid in $pids; do wait \"$pid\" || exit 1; done",
       "echo 'All docker images pulled successfully.'",
@@ -106,8 +107,8 @@ build {
   provisioner "shell" {
     inline = [
       "echo Installing kubectl...",
-      "curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.35/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg",
-      "echo \"deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.35/deb/ /\" | sudo tee /etc/apt/sources.list.d/kubernetes.list",
+      "curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.36/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg",
+      "echo \"deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.36/deb/ /\" | sudo tee /etc/apt/sources.list.d/kubernetes.list",
       "sudo apt-get update",
       // kube-proxy requires conntrack to route traffic, and kubeadm v1.31+ enforces it in preflight checks
       "sudo apt-get install conntrack -y",
@@ -156,7 +157,7 @@ build {
   provisioner "shell" {
     inline = [
       "echo Installing kind...",
-      "/usr/local/go/bin/go install sigs.k8s.io/kind@v0.24.0",
+      "/usr/local/go/bin/go install sigs.k8s.io/kind@v0.32.0",
       "sudo cp /home/$USER/go/bin/kind /usr/local/bin/",
       "/home/$USER/go/bin/kind version",
     ]
