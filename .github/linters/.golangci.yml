@@ -1,4 +1,51 @@
+---
 version: "2"
 
 issues:
   new-from-rev: origin/main
+linters:
+  enable:
+    - gocritic
+    - gosec
+    - revive
+    - unconvert
+    - unparam
+    - wastedassign
+    - whitespace
+  settings:
+    errcheck:
+      check-blank: true
+    gocritic:
+      disabled-checks:
+        - singleCaseSwitch
+        - appendAssign
+    revive:
+      severity: warning
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    rules:
+      - linters:
+          - dupl
+          - goconst
+          - gosec
+        path: _test\.go
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
+formatters:
+  enable:
+    - gofmt
+    - goimports
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
+      - \.pb\.go
