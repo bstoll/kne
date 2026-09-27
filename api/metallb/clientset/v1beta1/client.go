@@ -92,10 +92,14 @@ var (
 )
 
 func init() {
-	metallbv1.AddToScheme(Scheme)
+	if err := metallbv1.AddToScheme(Scheme); err != nil {
+		panic(err)
+	}
 
 	metav1.AddToGroupVersion(Scheme, groupVersion)
-	metav1.AddMetaToScheme(Scheme)
+	if err := metav1.AddMetaToScheme(Scheme); err != nil {
+		panic(err)
+	}
 }
 
 func GV() *schema.GroupVersion {
@@ -105,7 +109,7 @@ func GV() *schema.GroupVersion {
 // NewForConfig returns a new Clientset based on c.
 func NewForConfig(c *rest.Config) (*Clientset, error) {
 	config := *c
-	config.ContentConfig.GroupVersion = &groupVersion
+	config.GroupVersion = &groupVersion
 	config.APIPath = "/apis"
 	config.NegotiatedSerializer = scheme.Codecs.WithoutConversion()
 	config.UserAgent = rest.DefaultKubernetesUserAgent()

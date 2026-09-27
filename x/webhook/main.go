@@ -90,7 +90,9 @@ func parseRequest(r http.Request) (*admissionv1.AdmissionReview, error) {
 	}
 
 	bodybuf := new(bytes.Buffer)
-	bodybuf.ReadFrom(r.Body)
+	if _, err := bodybuf.ReadFrom(r.Body); err != nil {
+		return nil, fmt.Errorf("failed to read request body: %w", err)
+	}
 	body := bodybuf.Bytes()
 
 	if len(body) == 0 {

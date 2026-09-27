@@ -100,7 +100,7 @@ func TestUpdatePod(t *testing.T) {
 			want: `
 01:23:45     POD: pod1 is now failed
 `[1:],
-			errch:    `Pod pod1 failed to deploy`,
+			errch:    `pod pod1 failed to deploy`,
 			canceled: true,
 		},
 		{

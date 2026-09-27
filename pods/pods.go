@@ -121,11 +121,11 @@ func (c *ContainerStatus) String() string {
 }
 
 func (c *ContainerStatus) Equal(oc *ContainerStatus) bool {
-	return !(c.Name != oc.Name ||
-		c.Image != oc.Image ||
-		c.Ready != oc.Ready ||
-		c.Reason != oc.Reason ||
-		c.Message != oc.Message)
+	return c.Name == oc.Name &&
+		c.Image == oc.Image &&
+		c.Ready == oc.Ready &&
+		c.Reason == oc.Reason &&
+		c.Message == oc.Message
 }
 
 // GetPodStatus returns the status of the pods found in the supplied namespace.
@@ -183,9 +183,9 @@ func WatchPodStatus(ctx context.Context, client kubernetes.Interface, namespace 
 // PodToStatus returns a pointer to a new PodStatus for pod.
 func PodToStatus(pod *corev1.Pod) *PodStatus {
 	s := PodStatus{
-		Name:      pod.ObjectMeta.Name,
-		Namespace: pod.ObjectMeta.Namespace,
-		UID:       pod.ObjectMeta.UID,
+		Name:      pod.Name,
+		Namespace: pod.Namespace,
+		UID:       pod.UID,
 		Phase:     pod.Status.Phase,
 		// Ready will be set to false below if one of the containers is not ready
 		Ready: len(pod.Status.ContainerStatuses)+len(pod.Status.InitContainerStatuses) > 0,

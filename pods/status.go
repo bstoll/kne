@@ -71,7 +71,7 @@ func newWatcher(ctx context.Context, cancel func(), ch chan *PodStatus, stop fun
 	return w
 }
 
-// SetProgress determins if progress output should be displayed while watching.
+// SetProgress determines if progress output should be displayed while watching.
 func (w *Watcher) SetProgress(value bool) {
 	w.mu.Lock()
 	w.progress = value
@@ -176,7 +176,7 @@ func (w *Watcher) updatePod(s *PodStatus) bool {
 		w.podStates[s.UID] = newState
 	}
 	if newState == "failed" {
-		w.errCh <- fmt.Errorf("Pod %s failed to deploy", s.Name)
+		w.errCh <- fmt.Errorf("pod %s failed to deploy", s.Name)
 		w.cancel()
 		return false
 	}

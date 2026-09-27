@@ -266,7 +266,7 @@ func TestIsEventNormal(t *testing.T) {
 			want: `
 01:23:45 NS: ns1 Event name: event2 Type: Warning Message: 0/1 nodes are available: 1 Insufficient cpu. preemption: 0/1 nodes are available: 1 No preemption victims found for incoming pod..
 `[1:],
-			errch:    "Event failed due to  . Message: 0/1 nodes are available: 1 Insufficient cpu. preemption: 0/1 nodes are available: 1 No preemption victims found for incoming pod..",
+			errch:    "event failed due to . message: 0/1 nodes are available: 1 Insufficient cpu. preemption: 0/1 nodes are available: 1 No preemption victims found for incoming pod..",
 			canceled: true,
 		},
 		{
@@ -275,7 +275,7 @@ func TestIsEventNormal(t *testing.T) {
 			want: `
 01:23:45 NS: ns1 Event name: event3 Type: Warning Message: 0/1 nodes are available: 1 Insufficient memory. preemption: 0/1 nodes are available: 1 No preemption victims found for incoming pod..
 `[1:],
-			errch:    "Event failed due to  . Message: 0/1 nodes are available: 1 Insufficient memory. preemption: 0/1 nodes are available: 1 No preemption victims found for incoming pod..",
+			errch:    "event failed due to . message: 0/1 nodes are available: 1 Insufficient memory. preemption: 0/1 nodes are available: 1 No preemption victims found for incoming pod..",
 			canceled: true,
 		},
 	} {

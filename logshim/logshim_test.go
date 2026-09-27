@@ -36,10 +36,12 @@ Prefix:Line 3
 	want3 := want2 + `Prefix:partial line 2
 `
 	// Writing with a partial line.
-	s.Write([]byte(`Line 1
+	if _, err := s.Write([]byte(`Line 1
 Line 2
 Line 3
-partial line 1`))
+partial line 1`)); err != nil {
+		t.Fatalf("Write failed: %v", err)
+	}
 	if got := b.String(); got != want1 {
 		t.Errorf("First: Got %q, want %q", got, want1)
 	}
@@ -54,7 +56,9 @@ partial line 1`))
 	}
 
 	// Write another partial line and close the shim
-	s.Write([]byte(`partial line 2`))
+	if _, err := s.Write([]byte(`partial line 2`)); err != nil {
+		t.Fatalf("Write failed: %v", err)
+	}
 	s.Close()
 	if got := b.String(); got != want3 {
 		t.Errorf("Second: Got %q, want %q", got, want3)

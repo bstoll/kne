@@ -122,7 +122,7 @@ func main() {
 		opts := []grpc.DialOption{
 			grpc.WithTransportCredentials(insecure.NewCredentials()),
 		}
-		conn, err := grpc.DialContext(ctx, a, opts...)
+		conn, err := grpc.NewClient(a, opts...)
 		if err != nil {
 			log.Fatalf("Failed to dial %q: %v", a, err)
 		}
@@ -138,7 +138,9 @@ func main() {
 					return err
 				}
 				defer func() {
-					stream.CloseSend()
+					if err := stream.CloseSend(); err != nil {
+						log.Warningf("Failed to close send stream: %v", err)
+					}
 				}()
 				log.Infof("Transmitting endpoint %v over wire...", e)
 				return w.Transmit(ctx, stream)
